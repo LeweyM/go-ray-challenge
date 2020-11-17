@@ -7,7 +7,7 @@ import (
 
 var a *Tuple
 
-func  aTuple(arg1, arg2, arg3, arg4 float64) error {
+func aTuple(arg1, arg2, arg3, arg4 float64) error {
 	a = &Tuple{arg1, arg2, arg3, arg4}
 	return nil
 }
@@ -78,6 +78,13 @@ func aVector(arg1, arg2, arg3 float64) error {
 	return nil
 }
 
+func aEqualsTuple(arg1, arg2, arg3, arg4 float64) error {
+	if a.x == arg1 && a.y == arg2 && a.z == arg3 && a.w == arg4 {
+		return nil
+	}
+	return fmt.Errorf("%v should have values (%g, %g, %g, %g)", *a, arg1, arg2, arg3, arg4)
+}
+
 func InitializeScenario(s *godog.ScenarioContext) {
 	s.Step(`^a ← tuple\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, aTuple)
 	s.Step(`^a ← point\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, aPoint)
@@ -90,4 +97,8 @@ func InitializeScenario(s *godog.ScenarioContext) {
 	s.Step(`^a is not a vector$`, aIsNotAVector)
 	s.Step(`^a is a vector$`, aIsAVector)
 	s.Step(`^a is not a point$`, aIsNotAPoint)
+	s.Step(`^a = tuple\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, aEqualsTuple)
+	s.BeforeScenario(func(sc *godog.Scenario) {
+		a = nil
+	})
 }
