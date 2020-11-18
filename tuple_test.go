@@ -67,6 +67,11 @@ func multipleEqualsTuple(t string, scalar, arg1, arg2, arg3, arg4 float64) error
 	return expectTuple(tuple.multiply(scalar), arg1, arg2, arg3, arg4)
 }
 
+func divideEqualsTuple(t string, scalar, arg1, arg2, arg3, arg4 float64) error {
+	tuple := tuples[t]
+	return expectTuple(tuple.divide(scalar), arg1, arg2, arg3, arg4)
+}
+
 func InitializeScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+varName+` ← `+tuple+`$`, setTuple)
 	s.Step(`^`+varName+` ← `+point+`$`, setPoint)
@@ -79,6 +84,7 @@ func InitializeScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+varName+` \- `+varName+` = `+point+`$`, subPoints)
 	s.Step(`^`+varName+` \- `+varName+` = `+vector+`$`, subVectors)
 	s.Step(`^`+varName+` \* `+floatingPoint+` = `+tuple+`$`, multipleEqualsTuple)
+	s.Step(`^`+varName+` \/ `+floatingPoint+` = `+tuple+`$`, divideEqualsTuple)
 	s.BeforeScenario(func(sc *godog.Scenario) {
 		tuples = make(map[string]*Tuple)
 	})
