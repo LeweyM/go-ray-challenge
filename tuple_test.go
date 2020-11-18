@@ -62,18 +62,32 @@ func negativeEqualsTuple(t string, arg1, arg2, arg3, arg4 float64) error {
 	return expectTuple(tuple.negate(), arg1, arg2, arg3, arg4)
 }
 
+func multipleEqualsTuple(t string, scalar, arg1, arg2, arg3, arg4 float64) error {
+	tuple := tuples[t]
+	return expectTuple(tuple.multiply(scalar), arg1, arg2, arg3, arg4)
+}
+
 func InitializeScenario(s *godog.ScenarioContext) {
-	s.Step(`^([A-Za-z0-9]*) ← tuple\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, setTuple)
-	s.Step(`^([A-Za-z0-9]*) ← point\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, setPoint)
-	s.Step(`^([A-Za-z0-9]*) ← vector\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, setVector)
-	s.Step(`^([A-Za-z0-9]*) = point\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, equalsPoint)
-	s.Step(`^([A-Za-z0-9]*) = vector\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, equalsVector)
-	s.Step(`^([A-Za-z0-9]*) = tuple\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, equalsTuple)
-	s.Step(`^-([A-Za-z0-9]*) = tuple\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, negativeEqualsTuple)
-	s.Step(`^([A-Za-z0-9]*) \+ ([A-Za-z0-9]*) = tuple\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, addTuples)
-	s.Step(`^([A-Za-z0-9]*) \- ([A-Za-z0-9]*) = point\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, subPoints)
-	s.Step(`^([A-Za-z0-9]*) \- ([A-Za-z0-9]*) = vector\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, subVectors)
+	s.Step(`^`+varName+` ← `+tuple+`$`, setTuple)
+	s.Step(`^`+varName+` ← `+point+`$`, setPoint)
+	s.Step(`^`+varName+` ← `+vector+`$`, setVector)
+	s.Step(`^`+varName+` = `+point+`$`, equalsPoint)
+	s.Step(`^`+varName+` = `+vector+`$`, equalsVector)
+	s.Step(`^`+varName+` = `+tuple+`$`, equalsTuple)
+	s.Step(`^-`+varName+` = `+tuple+`$`, negativeEqualsTuple)
+	s.Step(`^`+varName+` \+ `+varName+` = `+tuple+`$`, addTuples)
+	s.Step(`^`+varName+` \- `+varName+` = `+point+`$`, subPoints)
+	s.Step(`^`+varName+` \- `+varName+` = `+vector+`$`, subVectors)
+	s.Step(`^`+varName+` \* `+floatingPoint+` = `+tuple+`$`, multipleEqualsTuple)
 	s.BeforeScenario(func(sc *godog.Scenario) {
 		tuples = make(map[string]*Tuple)
 	})
 }
+
+const (
+	varName       = `([A-Za-z0-9]*)`
+	floatingPoint = `(\-*\d+\.\d+)`
+	point         = `point\(` + floatingPoint + `, ` + floatingPoint + `, ` + floatingPoint + `\)`
+	vector        = `vector\(` + floatingPoint + `, ` + floatingPoint + `, ` + floatingPoint + `\)`
+	tuple         = `tuple\(` + floatingPoint + `, ` + floatingPoint + `, ` + floatingPoint + `, ` + floatingPoint + `\)`
+)

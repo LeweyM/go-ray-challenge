@@ -46,3 +46,12 @@ func (t Tuple) negate() *Tuple {
 		w: -t.w,
 	}
 }
+
+func (t Tuple) multiply(scalar float64) *Tuple {
+	return &Tuple{
+		x: t.x * scalar,
+		y: t.y * scalar,
+		z: t.z * scalar,
+		w: t.w * scalar,
+	}
+}
