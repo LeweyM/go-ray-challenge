@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/cucumber/godog"
+	"math"
 )
 
 var tuples map[string]*Tuple
@@ -72,6 +74,16 @@ func divideEqualsTuple(t string, scalar, arg1, arg2, arg3, arg4 float64) error {
 	return expectTuple(tuple.divide(scalar), arg1, arg2, arg3, arg4)
 }
 
+func magnitudeEqualsFloat(t string, scalar float64) error {
+	tuple := tuples[t]
+	return expectTrue(tuple.magnitude() == scalar, fmt.Sprintf("magnitude should be %v, but is %g", scalar, tuple.magnitude()))
+}
+
+func magnitudeEqualsSquareRoot(t string, number float64) error {
+	tuple := tuples[t]
+	return expectTrue(tuple.magnitude() == math.Sqrt(number), fmt.Sprintf("magnitude should be √%v, but is %g", number, tuple.magnitude()))
+}
+
 func InitializeScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+varName+` ← `+tuple+`$`, setTuple)
 	s.Step(`^`+varName+` ← `+point+`$`, setPoint)
@@ -85,6 +97,8 @@ func InitializeScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+varName+` \- `+varName+` = `+vector+`$`, subVectors)
 	s.Step(`^`+varName+` \* `+floatingPoint+` = `+tuple+`$`, multipleEqualsTuple)
 	s.Step(`^`+varName+` \/ `+floatingPoint+` = `+tuple+`$`, divideEqualsTuple)
+	s.Step(`^magnitude\(`+varName+`\) = `+floatingPoint+`$`, magnitudeEqualsFloat)
+	s.Step(`^magnitude\(`+varName+`\) = √`+number+`$`, magnitudeEqualsSquareRoot)
 	s.BeforeScenario(func(sc *godog.Scenario) {
 		tuples = make(map[string]*Tuple)
 	})
@@ -93,6 +107,7 @@ func InitializeScenario(s *godog.ScenarioContext) {
 const (
 	varName       = `([A-Za-z0-9]*)`
 	floatingPoint = `(\-*\d+\.\d+)`
+	number        = `(\d+)`
 	point         = `point\(` + floatingPoint + `, ` + floatingPoint + `, ` + floatingPoint + `\)`
 	vector        = `vector\(` + floatingPoint + `, ` + floatingPoint + `, ` + floatingPoint + `\)`
 	tuple         = `tuple\(` + floatingPoint + `, ` + floatingPoint + `, ` + floatingPoint + `, ` + floatingPoint + `\)`

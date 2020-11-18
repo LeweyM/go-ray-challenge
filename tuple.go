@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 type Tuple struct {
 	x, y, z, w float64
 }
@@ -63,4 +65,8 @@ func (t Tuple) divide(scalar float64) *Tuple {
 		z: t.z / scalar,
 		w: t.w / scalar,
 	}
+}
+
+func (t Tuple) magnitude() float64 {
+	return math.Sqrt((t.x * t.x) + (t.y * t.y) + (t.z * t.z) + (t.w * t.w))
 }

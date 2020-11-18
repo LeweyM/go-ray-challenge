@@ -51,3 +51,16 @@ Feature: tuples
   Scenario: dividing a tuple by a scalar
     Given a ← tuple(1.0, -2.0, 3.0, -4.0)
     Then a / 2.0 = tuple(0.5, -1.0, 1.5, -2.0)
+
+  Scenario: computing the magnitude of vector(1, 0, 0)
+    Given v ← vector(1.0, 0.0, 0.0)
+    Then magnitude(v) = 1.0
+
+
+  Scenario: computing the magnitude of vector(1, 2, 3)
+    Given v ← vector(1.0, 2.0, 3.0)
+    Then magnitude(v) = √14
+
+  Scenario: computing the magnitude of vector(-1, -2, -3)
+    Given v ← vector(-1.0, -2.0, -3.0)
+    Then magnitude(v) = √14
