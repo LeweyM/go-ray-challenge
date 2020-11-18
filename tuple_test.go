@@ -57,6 +57,11 @@ func equalsTuple(t string, arg1, arg2, arg3, arg4 float64) error {
 	return expectTuple(tuple, arg1, arg2, arg3, arg4)
 }
 
+func negativeEqualsTuple(t string, arg1, arg2, arg3, arg4 float64) error {
+	tuple := tuples[t]
+	return expectTuple(tuple.negate(), arg1, arg2, arg3, arg4)
+}
+
 func InitializeScenario(s *godog.ScenarioContext) {
 	s.Step(`^([A-Za-z0-9]*) ← tuple\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, setTuple)
 	s.Step(`^([A-Za-z0-9]*) ← point\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, setPoint)
@@ -64,6 +69,7 @@ func InitializeScenario(s *godog.ScenarioContext) {
 	s.Step(`^([A-Za-z0-9]*) = point\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, equalsPoint)
 	s.Step(`^([A-Za-z0-9]*) = vector\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, equalsVector)
 	s.Step(`^([A-Za-z0-9]*) = tuple\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, equalsTuple)
+	s.Step(`^-([A-Za-z0-9]*) = tuple\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, negativeEqualsTuple)
 	s.Step(`^([A-Za-z0-9]*) \+ ([A-Za-z0-9]*) = tuple\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, addTuples)
 	s.Step(`^([A-Za-z0-9]*) \- ([A-Za-z0-9]*) = point\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, subPoints)
 	s.Step(`^([A-Za-z0-9]*) \- ([A-Za-z0-9]*) = vector\((\-*\d+\.\d+), (\-*\d+\.\d+), (\-*\d+\.\d+)\)$`, subVectors)

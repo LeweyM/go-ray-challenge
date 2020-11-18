@@ -1,4 +1,5 @@
 Feature: tuples
+
   Scenario: a tuple with w=1.0 is a point
     Given a ← tuple(4.3, -4.2, 3.1, 1.0)
     Then a = point(4.3, -4.2, 3.1)
@@ -34,3 +35,7 @@ Feature: tuples
     Given v1 ← vector(3.0, 2.0, 1.0)
     And   v2 ← vector(5.0, 6.0, 7.0)
     Then v1 - v2 = vector(-2.0, -4.0, -6.0)
+
+  Scenario: Negating a tuple
+    Given a ← tuple(1.0, -2.0, 3.0, -4.0)
+    Then -a = tuple(-1.0, 2.0, -3.0, 4.0)

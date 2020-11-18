@@ -37,3 +37,12 @@ func (t Tuple) subtract(t2 *Tuple) *Tuple {
 		w: t.w - t2.w,
 	}
 }
+
+func (t Tuple) negate() *Tuple {
+	return &Tuple{
+		x: -t.x,
+		y: -t.y,
+		z: -t.z,
+		w: -t.w,
+	}
+}
