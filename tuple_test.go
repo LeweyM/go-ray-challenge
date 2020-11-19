@@ -7,6 +7,7 @@ import (
 )
 
 var tuples map[string]*Tuple
+var colors map[string]*Color
 
 func setTuple(tuple string, arg1, arg2, arg3, arg4 float64) error {
 	tuples[tuple] = &Tuple{arg1, arg2, arg3, arg4}
@@ -20,6 +21,11 @@ func setPoint(p string, arg1, arg2, arg3 float64) error {
 
 func setVector(v string, arg1, arg2, arg3 float64) error {
 	tuples[v] = NewVector(arg1, arg2, arg3)
+	return nil
+}
+
+func setColor(c string, arg1, arg2, arg3 float64) error {
+	colors[c] = NewColor(arg1, arg2, arg3)
 	return nil
 }
 
@@ -98,8 +104,7 @@ func dotEqualsFloat(a, b string, scalar float64) error {
 	tupleA := tuples[a]
 	tupleB := tuples[b]
 	dot := tupleA.dot(tupleB)
-	return expectTrue(floatEquals(dot, scalar),
-		fmt.Sprintf("Expected %g, got %g", scalar, dot))
+	return expectFloatEquals(dot, scalar)
 }
 
 func crossEqualsVector(a, b string, arg1, arg2, arg3 float64) error {
@@ -109,10 +114,23 @@ func crossEqualsVector(a, b string, arg1, arg2, arg3 float64) error {
 	return expectVector(cross, arg1, arg2, arg3)
 }
 
+func colorRedEqualsFloat(a string, scalar float64) error {
+	return expectFloatEquals(colors[a].red(), scalar)
+}
+
+func colorBlueEqualsFloat(a string, scalar float64) error {
+	return expectFloatEquals(colors[a].blue(), scalar)
+}
+
+func colorGreenEqualsFloat(a string, scalar float64) error {
+	return expectFloatEquals(colors[a].green(), scalar)
+}
+
 func InitializeScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+varName+` ← `+tuple+`$`, setTuple)
 	s.Step(`^`+varName+` ← `+point+`$`, setPoint)
 	s.Step(`^`+varName+` ← `+vector+`$`, setVector)
+	s.Step(`^`+varName+` ← `+color+`$`, setColor)
 	s.Step(`^`+varName+` = `+point+`$`, equalsPoint)
 	s.Step(`^`+varName+` = `+vector+`$`, equalsVector)
 	s.Step(`^`+varName+` = `+tuple+`$`, equalsTuple)
@@ -120,25 +138,30 @@ func InitializeScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+varName+` \+ `+varName+` = `+tuple+`$`, addTuples)
 	s.Step(`^`+varName+` \- `+varName+` = `+point+`$`, subPoints)
 	s.Step(`^`+varName+` \- `+varName+` = `+vector+`$`, subVectors)
-	s.Step(`^`+varName+` \* `+floatingPoint+` = `+tuple+`$`, multipleEqualsTuple)
-	s.Step(`^`+varName+` \/ `+floatingPoint+` = `+tuple+`$`, divideEqualsTuple)
-	s.Step(`^magnitude\(`+varName+`\) = `+floatingPoint+`$`, magnitudeEqualsFloat)
+	s.Step(`^`+varName+` \* `+float+` = `+tuple+`$`, multipleEqualsTuple)
+	s.Step(`^`+varName+` \/ `+float+` = `+tuple+`$`, divideEqualsTuple)
+	s.Step(`^magnitude\(`+varName+`\) = `+float+`$`, magnitudeEqualsFloat)
 	s.Step(`^magnitude\(`+varName+`\) = √`+number+`$`, magnitudeEqualsSquareRoot)
 	s.Step(`^`+varName+` ← normalize\(`+varName+`\)$`, setNormalizeVector)
 	s.Step(`^normalize\(`+varName+`\) = `+vector+`$`, normalizeEqualsVector)
-	s.Step(`^dot\(`+varName+`, `+varName+`\) = `+floatingPoint+`$`, dotEqualsFloat)
+	s.Step(`^dot\(`+varName+`, `+varName+`\) = `+float+`$`, dotEqualsFloat)
 	s.Step(`^cross\(`+varName+`, `+varName+`\) = `+vector+`$`, crossEqualsVector)
+	s.Step(`^`+varName+`.red = `+float+`$`, colorRedEqualsFloat)
+	s.Step(`^`+varName+`.blue = `+float+`$`, colorBlueEqualsFloat)
+	s.Step(`^`+varName+`.green = `+float+`$`, colorGreenEqualsFloat)
 
 	s.BeforeScenario(func(sc *godog.Scenario) {
 		tuples = make(map[string]*Tuple)
+		colors = make(map[string]*Color)
 	})
 }
 
 const (
-	varName       = `([A-Za-z0-9]*)`
-	floatingPoint = `(\-*\d+\.\d+)`
-	number        = `(\d+)`
-	point         = `point\(` + floatingPoint + `, ` + floatingPoint + `, ` + floatingPoint + `\)`
-	vector        = `vector\(` + floatingPoint + `, ` + floatingPoint + `, ` + floatingPoint + `\)`
-	tuple         = `tuple\(` + floatingPoint + `, ` + floatingPoint + `, ` + floatingPoint + `, ` + floatingPoint + `\)`
+	varName = `([A-Za-z0-9]*)`
+	float   = `(\-*\d+\.\d+)`
+	number  = `(\d+)`
+	color   = `color\(` + float + `, ` + float + `, ` + float + `\)`
+	point   = `point\(` + float + `, ` + float + `, ` + float + `\)`
+	vector  = `vector\(` + float + `, ` + float + `, ` + float + `\)`
+	tuple   = `tuple\(` + float + `, ` + float + `, ` + float + `, ` + float + `\)`
 )

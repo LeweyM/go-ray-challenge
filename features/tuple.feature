@@ -88,3 +88,9 @@ Feature: tuples
     And b ← vector(2.0, 3.0, 4.0)
     Then cross(a, b) = vector(-1.0, 2.0, -1.0)
     And cross(b, a) = vector(1.0, -2.0, 1.0)
+
+  Scenario: Colors are (red, green, blue) tuples
+    Given c ← color(-0.5, 0.4, 1.7)
+    Then c.red = -0.5
+    And c.green = 0.4
+    And c.blue = 1.7
