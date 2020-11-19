@@ -77,3 +77,14 @@ Feature: tuples
     Given v ← vector(1.0, 2.0, 3.0)
     Then norm ← normalize(v)
     Then magnitude(norm) = 1.0
+
+  Scenario: The dot product of two tuples
+    Given a ← vector(1.0, 2.0, 3.0)
+    And b ← vector(2.0, 3.0, 4.0)
+    Then dot(a, b) = 20.0
+
+  Scenario: The cross product of two tuples
+    Given a ← vector(1.0, 2.0, 3.0)
+    And b ← vector(2.0, 3.0, 4.0)
+    Then cross(a, b) = vector(-1.0, 2.0, -1.0)
+    And cross(b, a) = vector(1.0, -2.0, 1.0)

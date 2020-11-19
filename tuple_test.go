@@ -94,6 +94,21 @@ func normalizeEqualsVector(t string, arg1, arg2, arg3 float64) error {
 	return expectVector(tuple.normalize(), arg1, arg2, arg3)
 }
 
+func dotEqualsFloat(a, b string, scalar float64) error {
+	tupleA := tuples[a]
+	tupleB := tuples[b]
+	dot := tupleA.dot(tupleB)
+	return expectTrue(floatEquals(dot, scalar),
+		fmt.Sprintf("Expected %g, got %g", scalar, dot))
+}
+
+func crossEqualsVector(a, b string, arg1, arg2, arg3 float64) error {
+	tupleA := tuples[a]
+	tupleB := tuples[b]
+	cross := tupleA.cross(tupleB)
+	return expectVector(cross, arg1, arg2, arg3)
+}
+
 func InitializeScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+varName+` ← `+tuple+`$`, setTuple)
 	s.Step(`^`+varName+` ← `+point+`$`, setPoint)
@@ -111,6 +126,8 @@ func InitializeScenario(s *godog.ScenarioContext) {
 	s.Step(`^magnitude\(`+varName+`\) = √`+number+`$`, magnitudeEqualsSquareRoot)
 	s.Step(`^`+varName+` ← normalize\(`+varName+`\)$`, setNormalizeVector)
 	s.Step(`^normalize\(`+varName+`\) = `+vector+`$`, normalizeEqualsVector)
+	s.Step(`^dot\(`+varName+`, `+varName+`\) = `+floatingPoint+`$`, dotEqualsFloat)
+	s.Step(`^cross\(`+varName+`, `+varName+`\) = `+vector+`$`, crossEqualsVector)
 
 	s.BeforeScenario(func(sc *godog.Scenario) {
 		tuples = make(map[string]*Tuple)

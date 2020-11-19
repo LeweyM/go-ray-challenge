@@ -80,3 +80,14 @@ func (t Tuple) normalize() *Tuple {
 		w: t.w / mag,
 	}
 }
+
+func (t Tuple) dot(t2 *Tuple) float64 {
+	return t.x * t2.x +
+		t.y * t2.y +
+		t.z * t2.z +
+		t.w * t2.w
+}
+
+func (t Tuple) cross(b *Tuple) *Tuple {
+	return NewVector(t.y * b.z - t.z * b.y, t.z * b.x - t.x * b.z, t.x * b.y - t.y * b.x)
+}
