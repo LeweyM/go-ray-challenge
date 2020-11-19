@@ -19,6 +19,10 @@ func expectVector(t *Tuple, arg1 float64, arg2 float64, arg3 float64) error {
 	return expectTuple(t, arg1, arg2, arg3, 0.0)
 }
 
+func expectColor(c *Color, arg1 float64, arg2 float64, arg3 float64) error {
+	return expectTuple(&c.t, arg1, arg2, arg3, 0.0)
+}
+
 func expectTuple(tuple *Tuple, arg1 float64, arg2 float64, arg3 float64, arg4 float64) error {
 	if floatEquals(tuple.x, arg1) && floatEquals(tuple.y, arg2) && floatEquals(tuple.z, arg3) && floatEquals(tuple.w, arg4) {
 		return nil

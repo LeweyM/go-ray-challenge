@@ -126,6 +126,33 @@ func colorGreenEqualsFloat(a string, scalar float64) error {
 	return expectFloatEquals(colors[a].green(), scalar)
 }
 
+func addColors(c1, c2 string, arg1, arg2, arg3 float64) error {
+	color1 := colors[c1]
+	color2 := colors[c2]
+	colorSum := color1.add(color2)
+	return expectColor(colorSum, arg1, arg2, arg3)
+}
+
+func subColors(c1, c2 string, arg1, arg2, arg3 float64) error {
+	color1 := colors[c1]
+	color2 := colors[c2]
+	colorSum := color1.subtract(color2)
+	return expectColor(colorSum, arg1, arg2, arg3)
+}
+
+func multiplyColorByScalar(c string, scalar, arg1, arg2, arg3 float64) error {
+	color := colors[c]
+	colorScaled := color.multiplyScalar(scalar)
+	return expectColor(colorScaled, arg1, arg2, arg3)
+}
+
+func multiplyColors(c1, c2 string, arg1, arg2, arg3 float64) error {
+	color1 := colors[c1]
+	color2 := colors[c2]
+	colorScaled := color1.multiply(color2)
+	return expectColor(colorScaled, arg1, arg2, arg3)
+}
+
 func InitializeScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+varName+` ← `+tuple+`$`, setTuple)
 	s.Step(`^`+varName+` ← `+point+`$`, setPoint)
@@ -149,6 +176,10 @@ func InitializeScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+varName+`.red = `+float+`$`, colorRedEqualsFloat)
 	s.Step(`^`+varName+`.blue = `+float+`$`, colorBlueEqualsFloat)
 	s.Step(`^`+varName+`.green = `+float+`$`, colorGreenEqualsFloat)
+	s.Step(`^`+varName+` \+ `+varName+` = `+color+`$`, addColors)
+	s.Step(`^`+varName+` \- `+varName+` = `+color+`$`, subColors)
+	s.Step(`^`+varName+` \* `+varName+` = `+color+`$`, multiplyColors)
+	s.Step(`^`+varName+` \* `+float+` = `+color+`$`, multiplyColorByScalar)
 
 	s.BeforeScenario(func(sc *godog.Scenario) {
 		tuples = make(map[string]*Tuple)
