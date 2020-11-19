@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func expectPoint(t *Tuple, arg1 float64, arg2 float64, arg3 float64) error {
 	if !t.isPoint() {
@@ -17,10 +20,15 @@ func expectVector(t *Tuple, arg1 float64, arg2 float64, arg3 float64) error {
 }
 
 func expectTuple(tuple *Tuple, arg1 float64, arg2 float64, arg3 float64, arg4 float64) error {
-	if tuple.x == arg1 && tuple.y == arg2 && tuple.z == arg3 && tuple.w == arg4 {
+	if floatEquals(tuple.x, arg1) && floatEquals(tuple.y, arg2) && floatEquals(tuple.z, arg3) && floatEquals(tuple.w, arg4) {
 		return nil
 	}
 	return fmt.Errorf("%v should have values (%g, %g, %g, %g)", *tuple, arg1, arg2, arg3, arg4)
+}
+
+func floatEquals(f1 float64, f2 float64) bool {
+	EPSILON := 0.0001
+	return math.Abs(f1 - f2) < EPSILON
 }
 
 func expectTrue(cond bool, errMsg string) error {

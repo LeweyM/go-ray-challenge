@@ -23,6 +23,11 @@ func setVector(v string, arg1, arg2, arg3 float64) error {
 	return nil
 }
 
+func setNormalizeVector(n, v string ) error {
+	tuples[n] = tuples[v].normalize()
+	return nil
+}
+
 func addTuples(t1, t2 string, arg1, arg2, arg3, arg4 float64) error {
 	tuple1 := tuples[t1]
 	tuple2 := tuples[t2]
@@ -84,6 +89,11 @@ func magnitudeEqualsSquareRoot(t string, number float64) error {
 	return expectTrue(tuple.magnitude() == math.Sqrt(number), fmt.Sprintf("magnitude should be √%v, but is %g", number, tuple.magnitude()))
 }
 
+func normalizeEqualsVector(t string, arg1, arg2, arg3 float64) error {
+	tuple := tuples[t]
+	return expectVector(tuple.normalize(), arg1, arg2, arg3)
+}
+
 func InitializeScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+varName+` ← `+tuple+`$`, setTuple)
 	s.Step(`^`+varName+` ← `+point+`$`, setPoint)
@@ -99,6 +109,9 @@ func InitializeScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+varName+` \/ `+floatingPoint+` = `+tuple+`$`, divideEqualsTuple)
 	s.Step(`^magnitude\(`+varName+`\) = `+floatingPoint+`$`, magnitudeEqualsFloat)
 	s.Step(`^magnitude\(`+varName+`\) = √`+number+`$`, magnitudeEqualsSquareRoot)
+	s.Step(`^`+varName+` ← normalize\(`+varName+`\)$`, setNormalizeVector)
+	s.Step(`^normalize\(`+varName+`\) = `+vector+`$`, normalizeEqualsVector)
+
 	s.BeforeScenario(func(sc *godog.Scenario) {
 		tuples = make(map[string]*Tuple)
 	})

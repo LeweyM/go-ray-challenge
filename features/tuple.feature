@@ -64,3 +64,16 @@ Feature: tuples
   Scenario: computing the magnitude of vector(-1, -2, -3)
     Given v ← vector(-1.0, -2.0, -3.0)
     Then magnitude(v) = √14
+
+    Scenario: Normalizing vector(4,0,0) gives (1,0,0)
+      Given v ← vector(4.0, 0.0, 0.0)
+      Then normalize(v) = vector(1.0, 0.0, 0.0)
+
+  Scenario: Normalizing vector(1,2,3)
+    Given v ← vector(1.0, 2.0, 3.0)
+    Then normalize(v) = vector(0.26726, 0.53452, 0.80178)
+
+  Scenario: Normalizing vector(1,2,3)
+    Given v ← vector(1.0, 2.0, 3.0)
+    Then norm ← normalize(v)
+    Then magnitude(norm) = 1.0
