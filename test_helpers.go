@@ -5,41 +5,26 @@ import (
 	"math"
 )
 
-func expectPoint(t *Tuple, arg1 float64, arg2 float64, arg3 float64) error {
-	if !t.isPoint() {
-		return fmt.Errorf("%v should be a point", *t)
-	}
-	return expectTuple(t, arg1, arg2, arg3, 1.0)
+const (
+	VarName  = `([A-Za-z0-9]*)`
+	Float    = `(\-*\d+\.\d+)`
+	Number   = `(\d+)`
+	Color    = `color\(` + Float + `, ` + Float + `, ` + Float + `\)`
+	Point    = `point\(` + Float + `, ` + Float + `, ` + Float + `\)`
+	Vector   = `vector\(` + Float + `, ` + Float + `, ` + Float + `\)`
+	TupleRex = `tuple\(` + Float + `, ` + Float + `, ` + Float + `, ` + Float + `\)`
+)
+
+func ExpectFloatEquals(a float64, b float64) error {
+	return ExpectTrue(FloatEquals(a, b), fmt.Sprintf("Expected %g, got %g", b, a))
 }
 
-func expectVector(t *Tuple, arg1 float64, arg2 float64, arg3 float64) error {
-	if !t.isVector() {
-		return fmt.Errorf("%v should be a vector", *t)
-	}
-	return expectTuple(t, arg1, arg2, arg3, 0.0)
-}
-
-func expectColor(c *Color, arg1 float64, arg2 float64, arg3 float64) error {
-	return expectTuple(&c.t, arg1, arg2, arg3, 0.0)
-}
-
-func expectTuple(tuple *Tuple, arg1 float64, arg2 float64, arg3 float64, arg4 float64) error {
-	if floatEquals(tuple.x, arg1) && floatEquals(tuple.y, arg2) && floatEquals(tuple.z, arg3) && floatEquals(tuple.w, arg4) {
-		return nil
-	}
-	return fmt.Errorf("%v should have values (%g, %g, %g, %g)", *tuple, arg1, arg2, arg3, arg4)
-}
-
-func expectFloatEquals(a float64, b float64) error {
-	return expectTrue(floatEquals(a, b), fmt.Sprintf("Expected %g, got %g", b, a))
-}
-
-func floatEquals(f1 float64, f2 float64) bool {
+func FloatEquals(f1 float64, f2 float64) bool {
 	EPSILON := 0.0001
 	return math.Abs(f1 - f2) < EPSILON
 }
 
-func expectTrue(cond bool, errMsg string) error {
+func ExpectTrue(cond bool, errMsg string) error {
 	if !cond {
 		return fmt.Errorf(errMsg)
 	}
@@ -47,5 +32,5 @@ func expectTrue(cond bool, errMsg string) error {
 }
 
 func expectFalse(cond bool, errMsg string) error {
-	return expectTrue(!cond, errMsg)
+	return ExpectTrue(!cond, errMsg)
 }
