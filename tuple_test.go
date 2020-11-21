@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/cucumber/godog"
-	"goRayChallenge/tuple"
+	"github/lewismetcalf/goRayChallenge/tuple"
 	"math"
 )
 

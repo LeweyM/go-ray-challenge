@@ -1,4 +1,4 @@
-module goRayChallenge
+module github/lewismetcalf/goRayChallenge
 
 go 1.15
 
