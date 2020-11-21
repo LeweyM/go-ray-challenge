@@ -5,12 +5,23 @@ type Matrix struct {
 	cells []float64
 }
 
-func NewMatrix4(r1, r2, r3, r4 []float64) Matrix {
-	var c []float64
-	c = append(r1, r2...)
-	c = append(c, r3...)
-	c = append(c, r4...)
-	return Matrix{size: 4, cells: c}
+func NewMatrix(m [][]float64) Matrix {
+	var cells []float64
+	for _, r := range m {
+		for _, c := range r {
+			cells = append(cells, c)
+		}
+	}
+	return Matrix{size: len(m), cells: cells}
+}
+
+func (m *Matrix) Equals(other Matrix) bool {
+	for i := 0; i < m.size; i++ {
+		if m.cells[i] != other.cells[i] {
+			return false
+		}
+	}
+	return true
 }
 
 func (m *Matrix) Get(x, y int) float64 {

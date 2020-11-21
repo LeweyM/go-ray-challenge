@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
 	"github/lewismetcalf/goRayChallenge/matrix"
@@ -14,7 +15,19 @@ func m(v string, x, y int, f float64) error {
 	return ExpectFloatEquals(m.Get(x, y), f)
 }
 
-func theFollowingXMatrixM(x, y int, v string, m *messages.PickleStepArgument_PickleTable) error {
+func equalMatrices(a, b string) error {
+	m1 := matrices[a]
+	m2 := matrices[b]
+	return ExpectTrue(m1.Equals(m2), fmt.Sprintf("expected %v and %v to be equal", m1, m2))
+}
+
+func notEqualMatrices(a, b string) error {
+	m1 := matrices[a]
+	m2 := matrices[b]
+	return ExpectFalse(m1.Equals(m2), fmt.Sprintf("expected %v and %v to be equal", m1, m2))
+}
+
+func theFollowingMatrixM(v string, m *messages.PickleStepArgument_PickleTable) error {
 	var mat [][]float64
 	for _, row := range m.GetRows() {
 		var r []float64
@@ -27,15 +40,21 @@ func theFollowingXMatrixM(x, y int, v string, m *messages.PickleStepArgument_Pic
 		}
 		mat = append(mat, r)
 	}
-	matrices[v] = matrix.NewMatrix4(mat[0], mat[1], mat[2], mat[3])
+	matrices[v] = matrix.NewMatrix(mat)
 	return nil
 }
 
+func theFollowingXMatrixM(x, y int, v string, m *messages.PickleStepArgument_PickleTable) error {
+	return theFollowingMatrixM(v, m)
+}
 
 func InitializeMatrixScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+VarName+`\[`+Number+`,`+Number+`\] = `+Float+`$`, m)
 	s.Step(`^`+VarName+`\[`+Number+`,`+Number+`\] = `+Number+`$`, m)
 	s.Step(`^the following `+Number+`x`+Number+` matrix `+VarName+`:$`, theFollowingXMatrixM)
+	s.Step(`^the following matrix `+VarName+`:$`, theFollowingMatrixM)
+	s.Step(`^`+VarName+` = `+VarName+`$`, equalMatrices)
+	s.Step(`^`+VarName+` != `+VarName+`$`, notEqualMatrices)
 
 	s.BeforeScenario(func(sc *godog.Scenario) {
 		matrices = make(map[string]matrix.Matrix)

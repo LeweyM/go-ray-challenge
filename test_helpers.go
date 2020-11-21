@@ -8,7 +8,7 @@ import (
 const (
 	VarName  = `([A-Za-z0-9]*)`
 	Float    = `(\-*\d+\.\d+)`
-	Number   = `(\d+)`
+	Number   = `(\-*\d+)`
 	Color    = `color\(` + Float + `, ` + Float + `, ` + Float + `\)`
 	Point    = `point\(` + Float + `, ` + Float + `, ` + Float + `\)`
 	Vector   = `vector\(` + Float + `, ` + Float + `, ` + Float + `\)`
@@ -31,6 +31,6 @@ func ExpectTrue(cond bool, errMsg string) error {
 	return nil
 }
 
-func expectFalse(cond bool, errMsg string) error {
+func ExpectFalse(cond bool, errMsg string) error {
 	return ExpectTrue(!cond, errMsg)
 }
