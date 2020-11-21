@@ -91,3 +91,12 @@ func (t Tuple) Dot(t2 *Tuple) float64 {
 func (t Tuple) Cross(b *Tuple) *Tuple {
 	return NewVector(t.Y* b.Z- t.Z* b.Y, t.Z* b.X- t.X* b.Z, t.X* b.Y- t.Y* b.X)
 }
+
+func (t *Tuple) Equals(other *Tuple) bool {
+	return FloatEquals(t.X, other.X) && FloatEquals(t.Y, other.Y) && FloatEquals(t.Z, other.Z) && FloatEquals(t.W, other.W)
+}
+
+func FloatEquals(f1 float64, f2 float64) bool {
+	EPSILON := 0.0001
+	return math.Abs(f1 - f2) < EPSILON
+}

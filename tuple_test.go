@@ -181,6 +181,7 @@ func multiplyColors(c1, c2 string, arg1, arg2, arg3 float64) error {
 
 func InitializeTupleScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+VarName+` ← `+TupleRex+`$`, setTuple)
+	s.Step(`^`+VarName+` ← tuple\(` + Number + `, ` + Number + `, ` + Number + `, ` + Number + `\)$`, setTuple)
 	s.Step(`^`+VarName+` ← `+Point+`$`, setPoint)
 	s.Step(`^`+VarName+` ← `+Vector+`$`, setVector)
 	s.Step(`^`+VarName+` ← `+Color+`$`, setColor)
