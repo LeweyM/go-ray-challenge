@@ -32,6 +32,9 @@ func newMatrix(m []float64) Matrix {
 }
 
 func (m *Matrix) Equals(other Matrix) bool {
+	if m.size != other.size {
+		return false
+	}
 	for i := 0; i < m.size; i++ {
 		if m.cells[i] != other.cells[i] {
 			return false
@@ -72,4 +75,61 @@ func (m *Matrix) MultiplyTuple(t *tuple.Tuple) tuple.Tuple {
 		r = append(r, c)
 	}
 	return tuple.Tuple{X: r[0], Y: r[1], Z: r[2], W: r[3]}
+}
+
+func (m *Matrix) Transpose() Matrix {
+	var d []float64
+	for col := 0; col < m.size; col++ {
+		for row := 0; row < m.size; row++ {
+			d = append(d, m.Get(row, col))
+		}
+	}
+	return Matrix{cells: d, size: m.size}
+}
+
+func (m *Matrix) Determinant() float64 {
+	return m.Get(0, 0) * m.Get(1, 1) -
+		m.Get(0, 1) * m.Get(1, 0)
+}
+
+func (m *Matrix) SubMatrix(row int, col int) Matrix {
+	rows := m.Rows()
+	subRows := splice2d(row, rows)
+	for i, subRow := range subRows {
+		subRows[i] = splice(col, subRow)
+	}
+	return NewMatrix(subRows)
+}
+
+func splice2d(i int, arr [][]float64) [][]float64 {
+	return append(arr[0:i], arr[i+1:]...)
+}
+
+func splice(i int, arr []float64) []float64 {
+	return append(arr[0:i], arr[i+1:]...)
+}
+
+func (m *Matrix) Rows() [][]float64 {
+	cellsCpy := make([]float64, m.size*m.size)
+	copy(cellsCpy, m.cells)
+	var rows [][]float64
+	for i := 0; i < m.size; i++ {
+		offset := i * m.size
+		rows = append(rows, cellsCpy[offset : offset+m.size])
+	}
+	return rows
+}
+
+func (m *Matrix) Minor(row, col int) float64 {
+	subMatrix := m.SubMatrix(row, col)
+	return subMatrix.Determinant()
+}
+
+func (m *Matrix) Cofactor(row, col int) float64 {
+	minor := m.Minor(row, col)
+	if row+col % 2 == 1 {
+		return minor * -1
+	} else {
+		return minor
+	}
 }
