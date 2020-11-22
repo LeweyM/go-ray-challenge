@@ -15,6 +15,11 @@ func m(v string, x, y int, f float64) error {
 	return ExpectFloatEquals(m.Get(x, y), f)
 }
 
+func mFraction(v string, x, y int, d, n float64) error {
+	m := matrices[v]
+	return ExpectFloatEquals(m.Get(x, y), d / n)
+}
+
 func equalMatrices(a, b string) error {
 	m1 := matrices[a]
 	m2 := matrices[b]
@@ -116,6 +121,45 @@ func cofactorA(a string, arg1, arg2 int, arg3 float64) error {
 	return ExpectFloatEquals(m.Cofactor(arg1, arg2), arg3)
 }
 
+func aIsInvertible(a string) error {
+	m := matrices[a]
+	return ExpectTrue(m.IsInvertable(), fmt.Sprintf("Expected %v to be invertable", m))
+}
+
+func aIsNotInvertible(a string) error {
+	m := matrices[a]
+	return ExpectFalse(m.IsInvertable(), fmt.Sprintf("Expected %v not be invertable", m))
+}
+
+func bInverseA(b, a string) error {
+	m := matrices[a]
+	matrices[b] = m.Invert()
+	return nil
+}
+
+func bIsTheFollowingXMatrix(b string, arg1, arg2 int, mm *messages.PickleStepArgument_PickleTable) error {
+	return expectEqualMatrices(matrices[b], matrixFromPickleTable(mm))
+}
+
+func inverseAIsTheFollowingXMatrix(a string, arg1, arg2 int, mm *messages.PickleStepArgument_PickleTable) error {
+	inverse := matrices[a]
+	return expectEqualMatrices(inverse.Invert(), matrixFromPickleTable(mm))
+}
+
+func cATimesB(c, a, b string) error {
+	ma := matrices[a]
+	mb := matrices[b]
+	matrices[c] = ma.Multiply(mb)
+	return nil
+}
+
+func cInverseBA(c, b, a string) error {
+	ma := matrices[a]
+	mb := matrices[b]
+	mc := matrices[c]
+	return expectEqualMatrices(mc.Multiply(mb.Invert()), ma)
+}
+
 func InitializeMatrixScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+VarName+`\[`+Number+`,`+Number+`\] = `+Float+`$`, m)
 	s.Step(`^`+VarName+`\[`+Number+`,`+Number+`\] = `+Number+`$`, m)
@@ -136,6 +180,15 @@ func InitializeMatrixScenario(s *godog.ScenarioContext) {
 	s.Step(`^determinant\(`+VarName+`\) = `+Number+`$`, determinantB)
 	s.Step(`^minor\(`+VarName+`, `+Number+`, `+Number+`\) = `+Number+`$`, minorA)
 	s.Step(`^cofactor\(`+VarName+`, `+Number+`, `+Number+`\) = `+Number+`$`, cofactorA)
+	s.Step(`^`+VarName+` is invertible$`, aIsInvertible)
+	s.Step(`^`+VarName+` is not invertible$`, aIsNotInvertible)
+	s.Step(`^`+VarName+`\[`+Number+`,`+Number+`\] = `+Float+`$`, m)
+	s.Step(`^`+VarName+`\[`+Number+`,`+Number+`\] = (\-*\d+)\/(\d+)$`, mFraction)
+	s.Step(`^`+VarName+` ← inverse\(`+VarName+`\)$`, bInverseA)
+	s.Step(`^`+VarName+` is the following `+Number+`x`+Number+` matrix:$`, bIsTheFollowingXMatrix)
+	s.Step(`^inverse\(`+VarName+`\) is the following (\d+)x(\d+) matrix:$`, inverseAIsTheFollowingXMatrix)
+	s.Step(`^`+VarName+` ← `+VarName+` \* `+VarName+`$`, cATimesB)
+	s.Step(`^`+VarName+` \* inverse\(`+VarName+`\) = `+VarName+`$`, cInverseBA)
 
 	s.BeforeScenario(func(sc *godog.Scenario) {
 		matrices = make(map[string]matrix.Matrix)

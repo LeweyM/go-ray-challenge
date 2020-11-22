@@ -1,7 +1,9 @@
 package matrix
 
 import (
+	"fmt"
 	"github/lewismetcalf/goRayChallenge/tuple"
+	"math"
 )
 
 type Matrix struct {
@@ -36,7 +38,8 @@ func (m *Matrix) Equals(other Matrix) bool {
 		return false
 	}
 	for i := 0; i < m.size; i++ {
-		if m.cells[i] != other.cells[i] {
+		FloatEquals(m.cells[i], other.cells[i])
+		if !FloatEquals(m.cells[i], other.cells[i]) {
 			return false
 		}
 	}
@@ -88,8 +91,17 @@ func (m *Matrix) Transpose() Matrix {
 }
 
 func (m *Matrix) Determinant() float64 {
-	return m.Get(0, 0) * m.Get(1, 1) -
-		m.Get(0, 1) * m.Get(1, 0)
+	if m.size == 2 {
+		return m.Get(0, 0) * m.Get(1, 1) -
+			m.Get(0, 1) * m.Get(1, 0)
+	} else {
+		firstRow := m.Rows()[0]
+		counter := 0.0
+		for i, cell := range firstRow {
+			counter += cell * m.Cofactor(0, i)
+		}
+		return counter
+	}
 }
 
 func (m *Matrix) SubMatrix(row int, col int) Matrix {
@@ -127,9 +139,31 @@ func (m *Matrix) Minor(row, col int) float64 {
 
 func (m *Matrix) Cofactor(row, col int) float64 {
 	minor := m.Minor(row, col)
-	if row+col % 2 == 1 {
+	if (row+col) % 2 == 1 {
 		return minor * -1
 	} else {
 		return minor
 	}
+}
+
+func (m *Matrix) IsInvertable() bool {
+	return m.Determinant() != 0
+}
+
+func (m *Matrix) Invert() Matrix {
+	cells := make([]float64, m.size*m.size)
+	copy(cells, m.cells)
+	println(fmt.Sprintf("%v", m))
+	for row := 0; row < m.size; row++ {
+		for col := 0; col < m.size; col++ {
+			c := m.Cofactor(row, col)
+			cells[m.index(col, row)] = c / m.Determinant()
+		}
+	}
+	return newMatrix(cells)
+}
+
+func FloatEquals(f1 float64, f2 float64) bool {
+	EPSILON := 0.0001
+	return math.Abs(f1 - f2) < EPSILON
 }
