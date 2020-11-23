@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	VarName  = `([A-Za-z0-9]*)`
+	VarName  = `([A-Za-z0-9_]*)`
 	Float    = `(\-*\d+\.\d+)`
 	Number   = `(\-*\d+)`
 	Color    = `color\(` + Float + `, ` + Float + `, ` + Float + `\)`

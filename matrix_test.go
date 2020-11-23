@@ -79,13 +79,9 @@ func transposeAIsTheFollowingMatrix(a string, ma *messages.PickleStepArgument_Pi
 	return expectEqualMatrices(m.Transpose(), expected)
 }
 
-func aIdentity_matrix(a string) error {
-	m := matrices[a]
-	return expectEqualMatrices(m, matrix.NewIdentityMatrix())
-}
-
-func aTransposeidentity_matrix(a string) error {
+func aTransposeidentity_matrix(a, i string) error {
 	identityMatrix := matrix.NewIdentityMatrix()
+	matrices[i] = identityMatrix
 	matrices[a] = identityMatrix.Transpose()
 	return nil
 }
@@ -172,8 +168,7 @@ func InitializeMatrixScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+VarName+` \* identity_matrix = `+VarName+``, aEqualsIdentity_matrixA)
 	s.Step(`^identity_matrix \* `+VarName+` = `+VarName+`$`, identity_matrixAA)
 	s.Step(`^transpose\(`+VarName+`\) is the following matrix:$`, transposeAIsTheFollowingMatrix)
-	s.Step(`^`+VarName+` = identity_matrix$`, aIdentity_matrix)
-	s.Step(`^`+VarName+` ← transpose\(identity_matrix\)$`, aTransposeidentity_matrix)
+	s.Step(`^`+VarName+` ← transpose\(`+VarName+`\)$`, aTransposeidentity_matrix)
 	s.Step(`^determinant\(`+VarName+`\) = `+Number+`\.$`, determinantA)
 	s.Step(`^submatrix\(`+VarName+`, `+Number+`, `+Number+`\) is the following `+Number+`x`+Number+` matrix:$`, submatrixAIsTheFollowingXMatrix)
 	s.Step(`^`+VarName+` ← submatrix\(`+VarName+`, `+Number+`, `+Number+`\)$`, bSubmatrixA)
