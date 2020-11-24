@@ -35,6 +35,24 @@ func NewRotationX(rads float64) Matrix {
 	return t
 }
 
+func NewRotationY(rads float64) Matrix {
+	t := NewIdentityMatrix()
+	t.set(0, 0, math.Cos(rads))
+	t.set(2, 2, math.Cos(rads))
+	t.set(2, 0, math.Sin(rads) * -1.0)
+	t.set(0, 2, math.Sin(rads))
+	return t
+}
+
+func NewRotationZ(rads float64) Matrix {
+	t := NewIdentityMatrix()
+	t.set(0, 0, math.Cos(rads))
+	t.set(1, 1, math.Cos(rads))
+	t.set(0, 1, math.Sin(rads) * -1.0)
+	t.set(1, 0, math.Sin(rads))
+	return t
+}
+
 func NewIdentityMatrix() Matrix {
 	return newMatrix([]float64{1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1})
 }

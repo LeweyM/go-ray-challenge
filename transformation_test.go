@@ -9,6 +9,8 @@ import (
 	"strconv"
 )
 
+var sqrt2 = math.Sqrt(2)
+
 func transformPPoint(t, p string, arg1, arg2, arg3 float64) error {
 	transform := matrices[t]
 	point := tuples[p]
@@ -45,6 +47,11 @@ func rotationX(r string, rads float64) error {
 	return nil
 }
 
+func rotationY(r string, rads float64) error {
+	matrices[r] = matrix.NewRotationY(math.Pi / rads)
+	return nil
+}
+
 func halfQuarterTimesPEqualsPoint(m, p string, p1 float64, p2root string, p2Denom float64, p3root string, p3Denom float64) error {
 	rotation := matrices[m]
 	point := tuples[p]
@@ -52,6 +59,53 @@ func halfQuarterTimesPEqualsPoint(m, p string, p1 float64, p2root string, p2Deno
 	p3 := parseRoot(p3root)
 	multiply := rotation.MultiplyTuple(point)
 	return ExpectPoint(&multiply, p1, p2 / p2Denom, p3 / p3Denom)
+}
+
+func half_quarterPPointb(a, b string, d1 string, n1, d2 float64, d3 string, n3 float64) error {
+	rotation := matrices[a]
+	point := tuples[b]
+	p1 := parseRoot(d1)
+	p3 := parseRoot(d3)
+	multiply := rotation.MultiplyTuple(point)
+	return ExpectPoint(&multiply, p1 / n1, d2, p3 / n3)
+}
+
+func half_quarterPPointc(a, p string) error {
+	point := tuples[p]
+	halfQuarter := matrices[a]
+	multiply := halfQuarter.MultiplyTuple(point)
+	return ExpectPoint(&multiply, sqrt2/-2, sqrt2/2, 0)
+}
+
+func full_quarterRotation_z(a string, arg1 float64) error {
+	matrices[a] = matrix.NewRotationZ(math.Pi / arg1)
+	return nil
+}
+
+func half_quarterRotation_z(a string, arg1 float64) error {
+	matrices[a] = matrix.NewRotationZ(math.Pi / arg1)
+	return nil
+}
+
+func InitializeTransformationScenario(s *godog.ScenarioContext) {
+	// transformation
+	s.Step(`^`+VarName+` \* `+VarName+` = point\(`+Number+`, `+Number+`, `+Number+`\)$`, transformPPoint)
+	s.Step(`^`+VarName+` \* `+VarName+` = vector\(`+Number+`, `+Number+`, `+Number+`\)$`, transformVVector)
+	s.Step(`^`+VarName+` ← translation\(`+Number+`, `+Number+`, `+Number+`\)$`, transformTranslation)
+	s.Step(`^`+VarName+` \* `+VarName+` = `+VarName+`$`, transformTimesVEqualsV)
+	s.Step(`^`+VarName+` ← scaling\(`+Number+`, `+Number+`, `+Number+`\)$`, transformScaling)
+	// rotation
+	s.Step(`^`+VarName+` ← rotation_x\(π \/ `+Number+`\)$`, rotationX)
+	s.Step(`^`+VarName+` ← rotation_y\(π \/ `+Number+`\)$`, rotationY)
+	s.Step(`^`+VarName+` \* `+VarName+` = point\(`+Number+`, `+rootNumber+`\/`+Number+`, `+rootNumber+`\/`+Number+`\)$`, halfQuarterTimesPEqualsPoint)
+	s.Step(`^`+VarName+` \* `+VarName+` = point\(`+rootNumber+`\/`+Number+`, `+Number+`, `+rootNumber+`\/`+Number+`\)$`, half_quarterPPointb)
+	s.Step(`^`+VarName+` ← rotation_z\(π \/ (\d+)\)$`, full_quarterRotation_z)
+	s.Step(`^`+VarName+` \* `+VarName+` = point\(-√2\/2, √2\/2, 0\)$`, half_quarterPPointc)
+	s.Step(`^`+VarName+` ← rotation_z\(π \/ (\d+)\)$`, half_quarterRotation_z)
+
+	s.BeforeScenario(func(sc *godog.Scenario) {
+		matrices = make(map[string]matrix.Matrix)
+	})
 }
 
 func parseRoot(s string) float64 {
@@ -66,22 +120,6 @@ func parseRoot(s string) float64 {
 		return math.Sqrt(float) * sign
 	}
 	panic("bad root parsing")
-}
-
-func InitializeTransformationScenario(s *godog.ScenarioContext) {
-	// transformation
-	s.Step(`^`+VarName+` \* `+VarName+` = point\(`+Number+`, `+Number+`, `+Number+`\)$`, transformPPoint)
-	s.Step(`^`+VarName+` \* `+VarName+` = vector\(`+Number+`, `+Number+`, `+Number+`\)$`, transformVVector)
-	s.Step(`^`+VarName+` ← translation\(`+Number+`, `+Number+`, `+Number+`\)$`, transformTranslation)
-	s.Step(`^`+VarName+` \* `+VarName+` = `+VarName+`$`, transformTimesVEqualsV)
-	s.Step(`^`+VarName+` ← scaling\(`+Number+`, `+Number+`, `+Number+`\)$`, transformScaling)
-	// rotation
-	s.Step(`^`+VarName+` ← rotation_x\(π \/ `+Number+`\)$`, rotationX)
-	s.Step(`^`+VarName+` \* `+VarName+` = point\(`+Number+`, `+rootNumber+`\/`+Number+`, `+rootNumber+`\/`+Number+`\)$`, halfQuarterTimesPEqualsPoint)
-
-	s.BeforeScenario(func(sc *godog.Scenario) {
-		matrices = make(map[string]matrix.Matrix)
-	})
 }
 
 func ExpectVectorEqual(multiplyTuple tuple.Tuple, vector *tuple.Tuple) error {
