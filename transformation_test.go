@@ -87,6 +87,11 @@ func half_quarterRotation_z(a string, arg1 float64) error {
 	return nil
 }
 
+func transformShearing(s string, arg1, arg2, arg3, arg4, arg5, arg6 float64) error {
+	matrices[s] = matrix.NewShearing(arg1, arg2, arg3, arg4, arg5, arg6)
+	return nil
+}
+
 func InitializeTransformationScenario(s *godog.ScenarioContext) {
 	// transformation
 	s.Step(`^`+VarName+` \* `+VarName+` = point\(`+Number+`, `+Number+`, `+Number+`\)$`, transformPPoint)
@@ -102,6 +107,8 @@ func InitializeTransformationScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+VarName+` ← rotation_z\(π \/ (\d+)\)$`, full_quarterRotation_z)
 	s.Step(`^`+VarName+` \* `+VarName+` = point\(-√2\/2, √2\/2, 0\)$`, half_quarterPPointc)
 	s.Step(`^`+VarName+` ← rotation_z\(π \/ (\d+)\)$`, half_quarterRotation_z)
+	//shearing
+	s.Step(`^`+VarName+` ← shearing\((\d+), (\d+), (\d+), (\d+), (\d+), (\d+)\)$`, transformShearing)
 
 	s.BeforeScenario(func(sc *godog.Scenario) {
 		matrices = make(map[string]matrix.Matrix)

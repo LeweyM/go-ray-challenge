@@ -53,6 +53,17 @@ func NewRotationZ(rads float64) Matrix {
 	return t
 }
 
+func NewShearing(xy, xz, yx, yz, zx, zy float64) Matrix {
+	t := NewIdentityMatrix()
+	t.set(0, 1, xy)
+	t.set(0, 2, xz)
+	t.set(1, 0, yx)
+	t.set(1, 2, yz)
+	t.set(2, 0, zx)
+	t.set(2, 1, zy)
+	return t
+}
+
 func NewIdentityMatrix() Matrix {
 	return newMatrix([]float64{1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1})
 }
