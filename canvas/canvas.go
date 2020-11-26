@@ -47,18 +47,16 @@ func (c *Canvas) index(x int, y int) int {
 }
 
 func (c *Canvas) ToPPM() string {
-	response := "P3\n5 3\n255"
+	w := strconv.Itoa(c.width)
+	h := strconv.Itoa(c.height)
+	response := "P3\n"+w+" "+h+"\n255"
 	for y := 0; y < c.height; y++ {
 		response += "\n"
 		var row []string
 		for x := 0; x < c.width; x++ {
-			r := toPrintedPixel(c.PixelAt(x, y).Red())
-			g := toPrintedPixel(c.PixelAt(x, y).Green())
-			b := toPrintedPixel(c.PixelAt(x, y).Blue())
-			row = append(row, r)
-			row = append(row, g)
-			row = append(row, b)
-
+			row = append(row, toPrintedPixel(c.PixelAt(x, y).Red()))
+			row = append(row, toPrintedPixel(c.PixelAt(x, y).Green()))
+			row = append(row, toPrintedPixel(c.PixelAt(x, y).Blue()))
 		}
 		response += splitRow([]byte(strings.Join(row, " ")))
 	}
@@ -72,13 +70,13 @@ func toPrintedPixel(p float64) string {
 }
 
 func splitRow(row []byte) string {
-	if len(row) <= 70 {
-		return string(row)
+	j := 70
+	for j < len(row) {
+		for row[j] != ' ' {
+			j--
+		}
+		row[j] = '\n'
+		j += 70
 	}
-	i := 70
-	for row[i] != ' ' {
-		i--
-	}
-	row[i] = '\n'
 	return string(row)
 }

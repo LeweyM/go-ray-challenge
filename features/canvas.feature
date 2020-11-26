@@ -14,12 +14,12 @@ Feature: Canvas
     Then pixel_at(c, 2, 3) = red
 
   Scenario: Constructing the PPM header
-    Given c ← canvas(5, 3)
+    Given c ← canvas(8, 2)
     When ppm ← canvas_to_ppm(c)
     Then lines 1-3 of ppm are
       """
       P3
-      5 3
+      8 2
       255
       """
 
@@ -39,14 +39,13 @@ Feature: Canvas
       0 0 0 0 0 0 0 0 0 0 0 0 0 0 255
       """
 
-  Scenario: Splitting long lines in PPM files
-    Given c ← canvas(10, 2)
+  Scenario: Splitting very long lines in PPM files
+    Given c ← canvas(12, 1)
     When every pixel of c is set to color(1.0, 0.8, 0.6)
     And ppm ← canvas_to_ppm(c)
-    Then lines 4-7 of ppm are
+    Then lines 4-6 of ppm are
       """
       255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
-      153 255 204 153 255 204 153 255 204 153 255 204 153
-      255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
-      153 255 204 153 255 204 153 255 204 153 255 204 153
+      153 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255
+      204 153
       """
