@@ -10,7 +10,7 @@ import (
 
 var matrices map[string]matrix.Matrix
 
-func m(v string, x, y int, f float64) error {
+func setM(v string, x, y int, f float64) error {
 	m := matrices[v]
 	return ExpectFloatEquals(m.Get(x, y), f)
 }
@@ -157,8 +157,8 @@ func cInverseBA(c, b, a string) error {
 }
 
 func InitializeMatrixScenario(s *godog.ScenarioContext) {
-	s.Step(`^`+VarName+`\[`+Number+`,`+Number+`\] = `+Float+`$`, m)
-	s.Step(`^`+VarName+`\[`+Number+`,`+Number+`\] = `+Number+`$`, m)
+	s.Step(`^`+VarName+`\[`+Number+`,`+Number+`\] = `+Float+`$`, setM)
+	s.Step(`^`+VarName+`\[`+Number+`,`+Number+`\] = `+Number+`$`, setM)
 	s.Step(`^the following `+Number+`x`+Number+` matrix `+VarName+`:$`, theFollowingXMatrixM)
 	s.Step(`^the following matrix `+VarName+`:$`, theFollowingMatrixM)
 	s.Step(`^`+VarName+` = `+VarName+`$`, equalMatrices)
@@ -177,7 +177,7 @@ func InitializeMatrixScenario(s *godog.ScenarioContext) {
 	s.Step(`^cofactor\(`+VarName+`, `+Number+`, `+Number+`\) = `+Number+`$`, cofactorA)
 	s.Step(`^`+VarName+` is invertible$`, aIsInvertible)
 	s.Step(`^`+VarName+` is not invertible$`, aIsNotInvertible)
-	s.Step(`^`+VarName+`\[`+Number+`,`+Number+`\] = `+Float+`$`, m)
+	s.Step(`^`+VarName+`\[`+Number+`,`+Number+`\] = `+Float+`$`, setM)
 	s.Step(`^`+VarName+`\[`+Number+`,`+Number+`\] = (\-*\d+)\/(\d+)$`, mFraction)
 	s.Step(`^`+VarName+` ← inverse\(`+VarName+`\)$`, bInverseA)
 	s.Step(`^`+VarName+` is the following `+Number+`x`+Number+` matrix:$`, bIsTheFollowingXMatrix)

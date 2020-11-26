@@ -105,4 +105,4 @@ func ExpectEqualsTuple(origin tuple.Tuple, o *tuple.Tuple) error {
 	return ExpectTrue(origin.Equals(o), fmt.Sprintf("Expected %v to equal %p", origin, o))
 }
 
-const complexNum = `(\-?\d*\.?\d)`
+const complexNum = `(\-?\d*\.?\d*)`
