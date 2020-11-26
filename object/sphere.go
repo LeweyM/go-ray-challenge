@@ -54,3 +54,8 @@ func (s Sphere) Transform() matrix.Matrix {
 func (s *Sphere) SetTransform(t matrix.Matrix) {
 	s.transform = t
 }
+
+func (s Sphere) NormalAt(point *tuple.Tuple) tuple.Tuple {
+	subtract := point.Subtract(tuple.NewPoint(0, 0, 0))
+	return *subtract.Normalize()
+}

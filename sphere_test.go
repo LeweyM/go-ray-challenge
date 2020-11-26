@@ -3,9 +3,12 @@ package main
 import (
 	"github.com/cucumber/godog"
 	"github/lewismetcalf/goRayChallenge/matrix"
+	"github/lewismetcalf/goRayChallenge/tuple"
+	"math"
 )
 
 var t matrix.Matrix
+var n tuple.Tuple
 
 func stransformIdentity_matrix() error {
 	return expectEqualMatrices(s.Transform(), matrix.NewIdentityMatrix())
@@ -30,10 +33,39 @@ func set_transformsTranslation(arg1, arg2, arg3 float64) error {
 	return nil
 }
 
+func nNormal_atsPoint(arg1, arg2, arg3 float64) error {
+	n = s.NormalAt(tuple.NewPoint(arg1, arg2, arg3))
+	return nil
+}
+
+func nNormal_atsRootPoint(arg1, arg2, arg3, arg4, arg5, arg6 float64) error {
+	n = s.NormalAt(tuple.NewPoint(math.Sqrt(arg1)/arg2, math.Sqrt(arg3)/arg4, math.Sqrt(arg5)/arg6))
+	return nil
+}
+
+func nNormalizen() error {
+	return ExpectEqualsTuple(n, n.Normalize())
+}
+
+func nVector(arg1, arg2, arg3 float64) error {
+	return ExpectVector(&n, arg1, arg2, arg3)
+}
+
+func nRootVector(arg1, arg2, arg3, arg4, arg5, arg6 float64) error {
+	return ExpectVector(&n, math.Sqrt(arg1)/arg2, math.Sqrt(arg3)/arg4, math.Sqrt(arg5)/arg6)
+}
+
 func SphereContext(s *godog.ScenarioContext) {
 	s.Step(`^s\.transform = identity_matrix$`, stransformIdentity_matrix)
 	s.Step(`^set_transform\(s, t\)$`, set_transformsT)
 	s.Step(`^s\.transform = t$`, stransformT)
 	s.Step(`^set_transform\(s, scaling\((\d+), (\d+), (\d+)\)\)$`, set_transformsScaling)
 	s.Step(`^set_transform\(s, translation\((\d+), (\d+), (\d+)\)\)$`, set_transformsTranslation)
+	// normalAt
+	s.Step(`^n ← normal_at\(s, point\((\d+), (\d+), (\d+)\)\)$`, nNormal_atsPoint)
+	s.Step(`^n ← normal_at\(s, point\(√(\d+)\/(\d+), √(\d+)\/(\d+), √(\d+)\/(\d+)\)\)$`, nNormal_atsRootPoint)
+	s.Step(`^n = normalize\(n\)$`, nNormalizen)
+	s.Step(`^n = vector\(`+complexNum+`, `+complexNum+`, `+complexNum+`\)$`, nVector)
+	s.Step(`^n = vector\(√(\d+)\/(\d+), √(\d+)\/(\d+), √(\d+)\/(\d+)\)$`, nRootVector)
+
 }
