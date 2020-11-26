@@ -1,6 +1,8 @@
 package tuple
 
-import "math"
+import (
+	"math"
+)
 
 type Tuple struct {
 	X, Y, Z, W float64
@@ -94,6 +96,11 @@ func (t Tuple) Cross(b *Tuple) *Tuple {
 
 func (t *Tuple) Equals(other *Tuple) bool {
 	return FloatEquals(t.X, other.X) && FloatEquals(t.Y, other.Y) && FloatEquals(t.Z, other.Z) && FloatEquals(t.W, other.W)
+}
+
+func (t Tuple) Reflect(normal *Tuple) Tuple {
+	dot := t.Dot(normal)
+	return *t.Subtract(normal.Multiply(2).Multiply(dot))
 }
 
 func FloatEquals(f1 float64, f2 float64) bool {

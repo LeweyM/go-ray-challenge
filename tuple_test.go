@@ -179,6 +179,26 @@ func multiplyColors(c1, c2 string, arg1, arg2, arg3 float64) error {
 	return ExpectColor(colorScaled, arg1, arg2, arg3)
 }
 
+func nRootRootVector(arg1, arg2, arg3, arg4, arg5 float64) error {
+	n = *tuple.NewVector(math.Sqrt(arg1)/arg2, math.Sqrt(arg3)/arg4, arg5)
+	tuples["n"] = tuple.NewVector(math.Sqrt(arg1)/arg2, math.Sqrt(arg3)/arg4, arg5)
+	return nil
+}
+
+var reflection tuple.Tuple
+
+func rReflectvN() error {
+	v := tuples["v"]
+	n := tuples["n"]
+
+	reflection = v.Reflect(n)
+	return nil
+}
+
+func rVector(arg1, arg2, arg3 float64) error {
+	return ExpectVector(&reflection, arg1, arg2, arg3)
+}
+
 func InitializeTupleScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+VarName+` ← `+TupleRex+`$`, setTuple)
 	s.Step(`^`+VarName+` ← tuple\(` + Number + `, ` + Number + `, ` + Number + `, ` + Number + `\)$`, setTuple)
@@ -209,6 +229,10 @@ func InitializeTupleScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+VarName+` \- `+VarName+` = `+Color+`$`, subColors)
 	s.Step(`^`+VarName+` \* `+VarName+` = `+Color+`$`, multiplyColors)
 	s.Step(`^`+VarName+` \* `+Float+` = `+Color+`$`, multiplyColorByScalar)
+	// reflection
+	s.Step(`^n ← vector\(√(\d+)\/(\d+), √(\d+)\/(\d+), (\d+)\)$`, nRootRootVector)
+	s.Step(`^r ← reflect\(v, n\)$`, rReflectvN)
+	s.Step(`^r = vector\((\d+), (\d+), (\d+)\)$`, rVector)
 
 	s.BeforeScenario(func(sc *godog.Scenario) {
 		tuples = make(map[string]*tuple.Tuple)
