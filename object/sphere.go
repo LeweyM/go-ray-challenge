@@ -1,6 +1,8 @@
 package object
 
 import (
+	"github.com/gofrs/uuid"
+	"github/lewismetcalf/goRayChallenge/matrix"
 	"github/lewismetcalf/goRayChallenge/ray"
 	"github/lewismetcalf/goRayChallenge/tuple"
 	"math"

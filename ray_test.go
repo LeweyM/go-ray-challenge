@@ -11,6 +11,8 @@ import (
 var r ray.Ray
 var r2 ray.Ray
 
+var s object.Sphere
+
 func rRayoriginDirection() error {
 	o := tuples["origin"]
 	d := tuples["direction"]
@@ -45,18 +47,39 @@ func sSphere() error {
 	return nil
 }
 
-func sSphere() error {
-	s = *object.NewSphere()
-	return nil
-}
-
 func xsEquals(arg1 int, arg2 float64) error {
 	intersection := xs.Get(arg1)
 	return ExpectFloatEquals(intersection.Time(), arg2)
 }
 
+func xsIntersectsR() error {
+	_, xs = s.Intersects(r)
+	return nil
+}
+
 func xscount(arg1 int) error {
 	return ExpectTrue(xs.Count() == arg1, fmt.Sprintf("expected %v, to equal %d", xs.Count(), arg1))
+}
+
+func xsObjectS(arg1 int) error {
+	intersection := xs.Get(arg1)
+	return ExpectObjectEquals(intersection.Object(), s)
+}
+
+func r2DirectionVector(arg1, arg2, arg3 float64) error {
+	direction := r2.Direction()
+	return ExpectVector(&direction, arg1, arg2, arg3)
+}
+
+func r2OriginPoint(arg1, arg2, arg3 float64) error {
+	origin := r2.Origin()
+	return ExpectPoint(&origin, arg1, arg2, arg3)
+}
+
+func rTransformrM() error {
+	m := matrices["m"]
+	r2 = r.Transform(m)
+	return nil
 }
 
 func RayContext(s *godog.ScenarioContext) {

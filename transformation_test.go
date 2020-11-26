@@ -25,15 +25,15 @@ func transformVVector(t, v string, arg1, arg2, arg3 float64) error {
 	return ExpectVector(&multiplyTuple, arg1, arg2, arg3)
 }
 
-func transformTranslation(t string, arg1, arg2, arg3 float64) error {
-	matrices[t] = matrix.NewTranslation(arg1, arg2, arg3)
+func transformTranslation(a string, arg1, arg2, arg3 float64) error {
+	t = matrix.NewTranslation(arg1, arg2, arg3)
+	matrices[a] = matrix.NewTranslation(arg1, arg2, arg3)
 	return nil
 }
 
-func transformTimesVEqualsV(t, v, unneeded string) error {
-	transform := matrices[t]
+func transformTimesVEqualsV(a, v, unneeded string) error {
 	vector := tuples[v]
-	multiplyTuple := transform.MultiplyTuple(vector)
+	multiplyTuple := t.MultiplyTuple(vector)
 	return ExpectVectorEqual(multiplyTuple, vector)
 }
 
@@ -58,7 +58,7 @@ func halfQuarterTimesPEqualsPoint(m, p string, p1 float64, p2root string, p2Deno
 	p2 := parseRoot(p2root)
 	p3 := parseRoot(p3root)
 	multiply := rotation.MultiplyTuple(point)
-	return ExpectPoint(&multiply, p1, p2 / p2Denom, p3 / p3Denom)
+	return ExpectPoint(&multiply, p1, p2/p2Denom, p3/p3Denom)
 }
 
 func half_quarterPPointb(a, b string, d1 string, n1, d2 float64, d3 string, n3 float64) error {
@@ -67,7 +67,7 @@ func half_quarterPPointb(a, b string, d1 string, n1, d2 float64, d3 string, n3 f
 	p1 := parseRoot(d1)
 	p3 := parseRoot(d3)
 	multiply := rotation.MultiplyTuple(point)
-	return ExpectPoint(&multiply, p1 / n1, d2, p3 / n3)
+	return ExpectPoint(&multiply, p1/n1, d2, p3/n3)
 }
 
 func half_quarterPPointc(a, p string) error {
