@@ -35,3 +35,7 @@ func (c *Color) MultiplyScalar(s float64) *Color {
 func (c *Color) Multiply(c2 *Color) *Color {
 	return NewColor(c.Red() * c2.Red(), c.Green() * c2.Green(), c.Blue() * c2.Blue())
 }
+
+func (c *Color) Equals(other *Color) bool {
+	return c.T.Equals(&other.T)
+}

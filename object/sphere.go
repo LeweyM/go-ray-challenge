@@ -11,14 +11,19 @@ import (
 type Sphere struct {
 	id        uuid.UUID
 	transform matrix.Matrix
+	material  Material
 }
 
 func NewSphere() *Sphere {
 	id, _ := uuid.NewV4()
-	return &Sphere{transform: matrix.NewIdentityMatrix(), id: id}
+	return &Sphere{
+		transform: matrix.NewIdentityMatrix(),
+		id: id,
+		material: *NewMaterial(),
+	}
 }
 
-func (s Sphere) Equals(other Sphere) bool {
+func (s *Sphere) Equals(other Sphere) bool {
 	return s.id == other.id
 }
 
@@ -47,7 +52,7 @@ func (s Sphere) Intersects(r ray.Ray) (bool, Intersections) {
 	return true, *NewIntersections(*NewIntersection(s, math.Min(t1, t2)), *NewIntersection(s, math.Max(t1, t2)))
 }
 
-func (s Sphere) Transform() matrix.Matrix {
+func (s *Sphere) Transform() matrix.Matrix {
 	return s.transform
 }
 
@@ -55,7 +60,7 @@ func (s *Sphere) SetTransform(t matrix.Matrix) {
 	s.transform = t
 }
 
-func (s Sphere) NormalAt(point *tuple.Tuple) tuple.Tuple {
+func (s *Sphere) NormalAt(point *tuple.Tuple) tuple.Tuple {
 	inverseTransform := s.transform.Invert()
 	objectPoint := inverseTransform.MultiplyTuple(point)
 	objectNormal := objectPoint.Subtract(tuple.NewPoint(0, 0, 0))
@@ -64,4 +69,12 @@ func (s Sphere) NormalAt(point *tuple.Tuple) tuple.Tuple {
 	worldNormal := transposedInverseTransform.MultiplyTuple(objectNormal)
 	worldNormal.W = 0
 	return *worldNormal.Normalize()
+}
+
+func (s *Sphere) Material() Material {
+	return s.material
+}
+
+func (s *Sphere) SetMaterial(mat Material) {
+	s.material = mat
 }
