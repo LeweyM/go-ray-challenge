@@ -80,6 +80,47 @@ func iIsNothing() error {
 	return ExpectFalse(iIsSomething, "Expected i to be nothing")
 }
 
+var comps object.Computations
+var shape object.Sphere
+
+func compsPrepare_computationsiR() error {
+	comps = i.PrepareComputations(r)
+	return nil
+}
+
+func compstIt() error {
+	return ExpectFloatEquals(comps.Time(), i.Time())
+}
+
+func iIntersectionShape(arg1 float64) error {
+	i = *object.NewIntersection(shape, arg1)
+	return nil
+}
+
+func compsobjectIobject() error {
+	return ExpectEqualsSpheres(comps.Object(), i.Object())
+}
+
+func compspointPoint(arg1, arg2, arg3 float64) error {
+	point := comps.Point()
+	return ExpectPoint(&point, arg1, arg2, arg3)
+}
+
+func compseyevVector(arg1, arg2, arg3 float64) error {
+	vector := comps.EyeVector()
+	return ExpectVector(&vector, arg1, arg2, arg3)
+}
+
+func compsnormalvVector(arg1, arg2, arg3 float64) error {
+	vector := comps.NormalVector()
+	return ExpectVector(&vector, arg1, arg2, arg3)
+}
+
+func shapeSphere() error {
+	shape = *object.NewSphere()
+	return nil
+}
+
 func IntersectionFeatureContext(s *godog.ScenarioContext) {
 	s.Step(`^i ← intersection\(`+complexNum+`, s\)$`, iIntersectionS)
 	s.Step(`^i\.object = s$`, iobjectS)
@@ -95,6 +136,16 @@ func IntersectionFeatureContext(s *godog.ScenarioContext) {
 	s.Step(`^i ← hit\(xs\)$`, iHitxs)
 	s.Step(`^xs ← intersections\(i2, i1\)$`, xsIntersectionsiI)
 	s.Step(`^i is nothing$`, iIsNothing)
+	//precomputation
+	s.Step(`^comps ← prepare_computations\(i, r\)$`, compsPrepare_computationsiR)
+	s.Step(`^comps\.eyev = vector\(`+complexNum+`, `+complexNum+`, `+complexNum+`\)$`, compseyevVector)
+	s.Step(`^comps\.normalv = vector\(`+complexNum+`, `+complexNum+`, `+complexNum+`\)$`, compsnormalvVector)
+	s.Step(`^comps\.object = i\.object$`, compsobjectIobject)
+	s.Step(`^comps\.point = point\(`+complexNum+`, `+complexNum+`, `+complexNum+`\)$`, compspointPoint)
+	s.Step(`^comps\.t = i\.t$`, compstIt)
+	s.Step(`^i ← intersection\((\d+), shape\)$`, iIntersectionShape)
+	s.Step(`^shape ← sphere\(\)$`, shapeSphere)
+
 
 	s.BeforeScenario(func(sc *godog.Scenario) {
 		xs = *object.NewIntersections()
