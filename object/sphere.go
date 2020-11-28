@@ -1,7 +1,6 @@
 package object
 
 import (
-	"github.com/gofrs/uuid"
 	"github/lewismetcalf/goRayChallenge/matrix"
 	"github/lewismetcalf/goRayChallenge/ray"
 	"github/lewismetcalf/goRayChallenge/tuple"
@@ -9,22 +8,19 @@ import (
 )
 
 type Sphere struct {
-	id        uuid.UUID
 	transform matrix.Matrix
 	material  Material
 }
 
 func NewSphere() *Sphere {
-	id, _ := uuid.NewV4()
 	return &Sphere{
 		transform: matrix.NewIdentityMatrix(),
-		id: id,
-		material: *NewMaterial(),
+		material:  *NewMaterial(),
 	}
 }
 
 func (s *Sphere) Equals(other Sphere) bool {
-	return s.id == other.id
+	return s.transform.Equals(other.transform) && s.material.Equals(other.material)
 }
 
 func (s Sphere) Intersects(r ray.Ray) (bool, Intersections) {

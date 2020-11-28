@@ -102,7 +102,7 @@ func RayContext(s *godog.ScenarioContext) {
 }
 
 func ExpectEqualsTuple(origin tuple.Tuple, o *tuple.Tuple) error {
-	return ExpectTrue(origin.Equals(o), fmt.Sprintf("Expected %v to equal %p", origin, o))
+	return ExpectTrue(origin.Equals(*o), fmt.Sprintf("Expected %v to equal %p", origin, o))
 }
 
 const complexNum = `(\-?\d*\.?\d*)`

@@ -37,5 +37,5 @@ func LightsContext(s *godog.ScenarioContext) {
 }
 
 func ExpectColorEquals(color tuple.Color, t2 *tuple.Color) error {
-	return ExpectTrue(color.Equals(t2), fmt.Sprintf("Expected %v, got %p", intensity, l.Intensity()))
+	return ExpectTrue(color.Equals(*t2), fmt.Sprintf("Expected %v, got %p", intensity, l.Intensity()))
 }

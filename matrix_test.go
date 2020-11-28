@@ -17,7 +17,7 @@ func setM(v string, x, y int, f float64) error {
 
 func mFraction(v string, x, y int, d, n float64) error {
 	m := matrices[v]
-	return ExpectFloatEquals(m.Get(x, y), d / n)
+	return ExpectFloatEquals(m.Get(x, y), d/n)
 }
 
 func equalMatrices(a, b string) error {
@@ -69,7 +69,7 @@ func identity_matrixAA(a, unneededArg string) error {
 	t := tuples[a]
 	identityMatrix := matrix.NewIdentityMatrix()
 	multiple := identityMatrix.MultiplyTuple(t)
-	return ExpectTrue(multiple.Equals(t),
+	return ExpectTrue(multiple.Equals(*t),
 		fmt.Sprintf("expected %v and %v to be equal", multiple, t))
 }
 

@@ -3,8 +3,13 @@ package light
 import "github/lewismetcalf/goRayChallenge/tuple"
 
 type PointLight struct {
-	position tuple.Tuple
+	position  tuple.Tuple
 	intensity tuple.Color
+}
+
+func (l *PointLight) Equals(other *PointLight) bool {
+	return l.position.Equals(other.position) &&
+		l.intensity.Equals(other.intensity)
 }
 
 func (l *PointLight) Intensity() *tuple.Color {

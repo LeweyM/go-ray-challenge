@@ -130,7 +130,7 @@ func parseRoot(s string) float64 {
 }
 
 func ExpectVectorEqual(multiplyTuple tuple.Tuple, vector *tuple.Tuple) error {
-	return ExpectTrue(multiplyTuple.Equals(vector),
+	return ExpectTrue(multiplyTuple.Equals(*vector),
 		fmt.Sprintf("Expected %v and %p to be equal.", multiplyTuple, vector))
 }
 
