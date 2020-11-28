@@ -121,6 +121,14 @@ func shapeSphere() error {
 	return nil
 }
 
+func compsinsideTrue() error {
+	return ExpectTrue(comps.IsInside(), fmt.Sprintf("Expected to be inside"))
+}
+
+func compsinsideFalse() error {
+	return ExpectFalse(comps.IsInside(), fmt.Sprintf("Expected to be inside"))
+}
+
 func IntersectionFeatureContext(s *godog.ScenarioContext) {
 	s.Step(`^i ← intersection\(`+complexNum+`, s\)$`, iIntersectionS)
 	s.Step(`^i\.object = s$`, iobjectS)
@@ -145,7 +153,8 @@ func IntersectionFeatureContext(s *godog.ScenarioContext) {
 	s.Step(`^comps\.t = i\.t$`, compstIt)
 	s.Step(`^i ← intersection\((\d+), shape\)$`, iIntersectionShape)
 	s.Step(`^shape ← sphere\(\)$`, shapeSphere)
-
+	s.Step(`^comps\.inside = true$`, compsinsideTrue)
+	s.Step(`^comps\.inside = false$`, compsinsideFalse)
 
 	s.BeforeScenario(func(sc *godog.Scenario) {
 		xs = *object.NewIntersections()
