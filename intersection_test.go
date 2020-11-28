@@ -90,7 +90,6 @@ func IntersectionFeatureContext(s *godog.ScenarioContext) {
 	s.Step(`^i4 ← intersection\(`+complexNum+`, s\)$`, i4IntersectionS)
 	s.Step(`^xs ← intersections\(i1, i2\)$`, ixsIntersectionsI1I2)
 	s.Step(`^xs ← intersections\(i1, i2, i3, i4\)$`, ixsIntersectionsI1I2I3I4)
-	s.Step(`^xs\[(\d+)\]\.t = (\d+)$`, ixsT)
 	s.Step(`^xs\.count = (\d+)$`, ixscount)
 	// hit
 	s.Step(`^i ← hit\(xs\)$`, iHitxs)

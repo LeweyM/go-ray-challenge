@@ -97,6 +97,16 @@ func wlightLight() error {
 	return ExpectTrue(pointLight.Equals(&l), fmt.Sprintf("Expected %v to equal %v.", pointLight, l))
 }
 
+func xsIntersect_worldwR() error {
+	xs = w.Intersect(r)
+	return nil
+}
+
+func xsT(arg1 int, f float64) error {
+	intersection := xs.Get(arg1)
+	return ExpectFloatEquals(intersection.Time(), f)
+}
+
 func WorldContext(s *godog.ScenarioContext) {
 	s.Step(`^w contains no objects$`, wContainsNoObjects)
 	s.Step(`^w has no light source$`, wHasNoLightSource)
@@ -108,6 +118,8 @@ func WorldContext(s *godog.ScenarioContext) {
 	s.Step(`^w ← default_world\(\)$`, wDefault_world)
 	s.Step(`^w\.light = light$`, wlightLight)
 
+	s.Step(`^xs ← intersect_world\(w, r\)$`, xsIntersect_worldwR)
+	s.Step(`^xs\[(\d+)\]\.t = `+complexNum+`$`, xsT)
 }
 
 func removeWhitespace(src string) string {

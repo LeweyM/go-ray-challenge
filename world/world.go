@@ -4,7 +4,9 @@ import (
 	"github/lewismetcalf/goRayChallenge/light"
 	"github/lewismetcalf/goRayChallenge/matrix"
 	object "github/lewismetcalf/goRayChallenge/object"
+	"github/lewismetcalf/goRayChallenge/ray"
 	"github/lewismetcalf/goRayChallenge/tuple"
+	"sort"
 )
 
 type World struct {
@@ -26,6 +28,21 @@ func (w *World) SetObjects(spheres ...object.Sphere) {
 
 func (w *World) SetLight(light light.PointLight) {
 	w.light = light
+}
+
+func (w *World) Intersect(r ray.Ray) object.Intersections {
+	xss := []object.Intersection{}
+	for _, o := range w.Objects() {
+		ok, intersections := o.Intersects(r)
+		if ok {
+			xss = append(xss, intersections.Get(0))
+			xss = append(xss, intersections.Get(1))
+		}
+	}
+	sort.Slice(xss, func(i, j int) bool {
+		return xss[i].Time() < xss[j].Time()
+	})
+	return *object.NewIntersections(xss...)
 }
 
 func NewWorld() *World {
