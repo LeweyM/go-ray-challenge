@@ -1,6 +1,8 @@
 package object
 
-import "sort"
+import (
+	"sort"
+)
 
 type Intersections struct {
 	intersections []Intersection
@@ -22,10 +24,27 @@ func (i *Intersections) Count() int {
 }
 
 func (i *Intersections) Hit() (bool, Intersection) {
-	closest := i.Get(0)
+	index := indexWithFirstNonNegativeTime(i.intersections)
+
+	if i.Count() == index {
+		return false, Intersection{}
+	}
+
+	closest := i.Get(index)
 	if closest.Time() >= 0 {
 		return true, closest
 	} else {
 		return false, Intersection{}
 	}
+}
+
+func indexWithFirstNonNegativeTime(intersections []Intersection) int {
+	var index = 0
+	for range intersections {
+		xs := intersections[index]
+		if xs.Time() < 0 {
+			index++
+		}
+	}
+	return index
 }

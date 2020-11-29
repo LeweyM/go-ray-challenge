@@ -9,18 +9,18 @@ import (
 
 type Sphere struct {
 	transform matrix.Matrix
-	material  Material
+	material  *Material
 }
 
 func NewSphere() *Sphere {
 	return &Sphere{
 		transform: matrix.NewIdentityMatrix(),
-		material:  *NewMaterial(),
+		material:  NewMaterial(),
 	}
 }
 
 func (s *Sphere) Equals(other Sphere) bool {
-	return s.transform.Equals(other.transform) && s.material.Equals(other.material)
+	return s.transform.Equals(other.transform) && s.material.Equals(*other.material)
 }
 
 func (s Sphere) Intersects(r ray.Ray) (bool, Intersections) {
@@ -67,10 +67,10 @@ func (s *Sphere) NormalAt(point *tuple.Tuple) tuple.Tuple {
 	return *worldNormal.Normalize()
 }
 
-func (s *Sphere) Material() Material {
+func (s *Sphere) Material() *Material {
 	return s.material
 }
 
 func (s *Sphere) SetMaterial(mat Material) {
-	s.material = mat
+	s.material = &mat
 }

@@ -55,6 +55,11 @@ func setColor(c string, arg1, arg2, arg3 float64) error {
 	return nil
 }
 
+func equalsColor(c string, arg1, arg2, arg3 float64) error {
+	color := colors[c]
+	return ExpectColor(color, arg1, arg2, arg3)
+}
+
 func setNormalizeVector(n, v string ) error {
 	tuples[n] = tuples[v].Normalize()
 	return nil
@@ -207,6 +212,7 @@ func InitializeTupleScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+VarName+` ← `+Vector+`$`, setVector)
 	s.Step(`^`+VarName+` ← vector\(` + Number + `, ` + Number + `, ` + Number + `\)$`, setVector)
 	s.Step(`^`+VarName+` ← `+Color+`$`, setColor)
+	s.Step(`^`+VarName+` = `+Color+`$`, equalsColor)
 	s.Step(`^`+VarName+` = `+Point+`$`, equalsPoint)
 	s.Step(`^`+VarName+` = `+Vector+`$`, equalsVector)
 	s.Step(`^`+VarName+` = `+TupleRex+`$`, equalsTuple)

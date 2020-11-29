@@ -45,6 +45,27 @@ func (w *World) Intersect(r ray.Ray) object.Intersections {
 	return *object.NewIntersections(xss...)
 }
 
+func (w *World) ShadeHit(comps object.Computations) *tuple.Color {
+	sphere := comps.Object()
+	material := sphere.Material()
+	point := comps.Point()
+	eyeVector := comps.EyeVector()
+	normalVector := comps.NormalVector()
+	lighting := material.Lighting(&w.light, &point, &eyeVector, &normalVector)
+	return &lighting
+}
+
+func (w *World) ColorAt(r ray.Ray) *tuple.Color {
+	intersections := w.Intersect(r)
+	hasHit, intersection := intersections.Hit()
+	if !hasHit {
+		return tuple.NewColor(0,0,0)
+	} else {
+		computations := intersection.PrepareComputations(r)
+		return w.ShadeHit(computations)
+	}
+}
+
 func NewWorld() *World {
 	return &World{}
 }

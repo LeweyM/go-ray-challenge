@@ -151,7 +151,7 @@ func IntersectionFeatureContext(s *godog.ScenarioContext) {
 	s.Step(`^comps\.object = i\.object$`, compsobjectIobject)
 	s.Step(`^comps\.point = point\(`+complexNum+`, `+complexNum+`, `+complexNum+`\)$`, compspointPoint)
 	s.Step(`^comps\.t = i\.t$`, compstIt)
-	s.Step(`^i ← intersection\((\d+), shape\)$`, iIntersectionShape)
+	s.Step(`^i ← intersection\(`+complexNum+`, shape\)$`, iIntersectionShape)
 	s.Step(`^shape ← sphere\(\)$`, shapeSphere)
 	s.Step(`^comps\.inside = true$`, compsinsideTrue)
 	s.Step(`^comps\.inside = false$`, compsinsideFalse)

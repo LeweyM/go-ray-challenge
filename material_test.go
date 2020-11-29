@@ -44,7 +44,7 @@ func setSMaterialToM() error {
 }
 
 func sMaterialEqualsM() error {
-	return ExpectEqualMaterials(s.Material(), mat)
+	return ExpectEqualMaterials(*s.Material(), mat)
 }
 
 func mEqualsNewMaterial() error {
@@ -52,7 +52,7 @@ func mEqualsNewMaterial() error {
 }
 
 func setMToSMaterial() error {
-	mat = s.Material()
+	mat = *s.Material()
 	return nil
 }
 

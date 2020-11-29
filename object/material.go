@@ -54,23 +54,23 @@ func (m *Material) SetAmbient(ambient float64) {
 	m.ambient = ambient
 }
 
-func (m *Material) Lighting(l *light.PointLight, position *tuple.Tuple, eyev *tuple.Tuple, normalv *tuple.Tuple) tuple.Color {
+func (m *Material) Lighting(l *light.PointLight, point, eye, normal *tuple.Tuple) tuple.Color {
 	effectiveColor := m.Color().Multiply(l.Intensity())
 
-	lightV := l.Position().Subtract(position).Normalize()
+	lightV := l.Position().Subtract(point).Normalize()
 
 	ambient := effectiveColor.MultiplyScalar(m.ambient)
 	var diffuse *tuple.Color
 	var specular *tuple.Color
 
-	lightDotNormal := lightV.Dot(normalv)
+	lightDotNormal := lightV.Dot(normal)
 	if lightDotNormal < 0 {
 		diffuse = tuple.NewColor(0, 0, 0)
 		specular = tuple.NewColor(0, 0, 0)
 	} else {
 		diffuse = effectiveColor.MultiplyScalar(m.diffuse).MultiplyScalar(lightDotNormal)
-		reflectV := lightV.Negate().Reflect(normalv)
-		reflectDotEye := reflectV.Dot(eyev)
+		reflectV := lightV.Negate().Reflect(normal)
+		reflectDotEye := reflectV.Dot(eye)
 		if reflectDotEye <= 0 {
 			specular = tuple.NewColor(0, 0, 0)
 		} else {

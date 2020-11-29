@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
+	"github/lewismetcalf/goRayChallenge/light"
 	"github/lewismetcalf/goRayChallenge/matrix"
 	"github/lewismetcalf/goRayChallenge/object"
 	"github/lewismetcalf/goRayChallenge/tuple"
@@ -16,6 +17,8 @@ import (
 var w *world.World
 var s1 *object.Sphere
 var s2 *object.Sphere
+var inner object.Sphere
+var outer object.Sphere
 
 func parseSphereFromTable(mm *messages.PickleStepArgument_PickleTable) *object.Sphere {
 	sphere := object.NewSphere()
@@ -107,6 +110,58 @@ func xsT(arg1 int, f float64) error {
 	return ExpectFloatEquals(intersection.Time(), f)
 }
 
+func cShade_hitwComps() error {
+	colors["c"] = w.ShadeHit(comps)
+	return nil
+}
+
+func shapeTheFirstObjectInW() error {
+	shape = w.Objects()[0]
+	return nil
+}
+
+func shapeTheSecondObjectInW() error {
+	shape = w.Objects()[1]
+	return nil
+}
+
+func wlightPoint_lightpointColor(arg1, arg2, arg3, arg4, arg5, arg6 float64) error {
+	pl := light.NewPointLight(*tuple.NewPoint(arg1, arg2, arg3), *tuple.NewColor(arg4, arg5, arg6))
+	w.SetLight(*pl)
+	return nil
+}
+
+func cColor_atwR() error {
+	colors["c"] = w.ColorAt(r)
+	return nil
+}
+
+func cInnermaterialcolor() error {
+	c := colors["c"]
+	innerMaterial := inner.Material()
+	return ExpectColorEquals(*innerMaterial.Color(), c)
+}
+
+func innerTheSecondObjectInW() error {
+	inner = w.Objects()[1]
+	return nil
+}
+
+func innermaterialambient(arg1 float64) error {
+	inner.Material().SetAmbient(arg1)
+	return nil
+}
+
+func outerTheFirstObjectInW() error {
+	outer = w.Objects()[0]
+	return nil
+}
+
+func outermaterialambient(arg1 float64) error {
+	outer.Material().SetAmbient(arg1)
+	return nil
+}
+
 func WorldContext(s *godog.ScenarioContext) {
 	s.Step(`^w contains no objects$`, wContainsNoObjects)
 	s.Step(`^w has no light source$`, wHasNoLightSource)
@@ -120,6 +175,17 @@ func WorldContext(s *godog.ScenarioContext) {
 
 	s.Step(`^xs ← intersect_world\(w, r\)$`, xsIntersect_worldwR)
 	s.Step(`^xs\[(\d+)\]\.t = `+complexNum+`$`, xsT)
+	s.Step(`^c ← shade_hit\(w, comps\)$`, cShade_hitwComps)
+	s.Step(`^shape ← the first object in w$`, shapeTheFirstObjectInW)
+	s.Step(`^shape ← the second object in w$`, shapeTheSecondObjectInW)
+	s.Step(`^w\.light ← point_light\(point\(`+complexNum+`, `+complexNum+`, `+complexNum+`\), color\(`+complexNum+`, `+complexNum+`, `+complexNum+`\)\)$`, wlightPoint_lightpointColor)
+	s.Step(`^c ← color_at\(w, r\)$`, cColor_atwR)
+
+	s.Step(`^c = inner\.material\.color$`, cInnermaterialcolor)
+	s.Step(`^inner ← the second object in w$`, innerTheSecondObjectInW)
+	s.Step(`^inner\.material\.ambient ← (\d+)$`, innermaterialambient)
+	s.Step(`^outer ← the first object in w$`, outerTheFirstObjectInW)
+	s.Step(`^outer\.material\.ambient ← (\d+)$`, outermaterialambient)
 }
 
 func removeWhitespace(src string) string {

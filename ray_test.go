@@ -87,7 +87,7 @@ func RayContext(s *godog.ScenarioContext) {
 	s.Step(`^r\.direction = direction$`, rdirectionDirection)
 	s.Step(`^r\.origin = origin$`, roriginOrigin)
 	s.Step(`^position\(r, (\-?\d*\.?\d)\) = point\((\-?\d*\.?\d), (\-?\d*\.?\d), (\-?\d*\.?\d)\)$`, positionrPoint)
-	s.Step(`^r ← ray\(point\((\d+), (\d+), (\-?\d+)\), vector\((\d+), (\d+), (\d+)\)\)$`, rRaypointVector)
+	s.Step(`^r ← ray\(point\(`+complexNum+`, `+complexNum+`, `+complexNum+`\), vector\(`+complexNum+`, `+complexNum+`, `+complexNum+`\)\)$`, rRaypointVector)
 	// sphere
 	s.Step(`^s ← sphere\(\)$`, sSphere)
 	s.Step(`^xs\[(\d+)\] = (\-?\d*\.?\d)$`, xsEquals)
@@ -104,5 +104,3 @@ func RayContext(s *godog.ScenarioContext) {
 func ExpectEqualsTuple(origin tuple.Tuple, o *tuple.Tuple) error {
 	return ExpectTrue(origin.Equals(*o), fmt.Sprintf("Expected %v to equal %p", origin, o))
 }
-
-const complexNum = `(\-?\d*\.?\d*)`

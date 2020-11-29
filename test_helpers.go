@@ -6,13 +6,14 @@ import (
 )
 
 const (
-	VarName  = `([A-Za-z0-9_]*)`
-	Float    = `(\-*\d+\.\d+)`
-	Number   = `(\-*\d+)`
-	Color    = `color\(` + Float + `, ` + Float + `, ` + Float + `\)`
-	Point    = `point\(` + Float + `, ` + Float + `, ` + Float + `\)`
-	Vector   = `vector\(` + Float + `, ` + Float + `, ` + Float + `\)`
-	TupleRex = `tuple\(` + Float + `, ` + Float + `, ` + Float + `, ` + Float + `\)`
+	VarName    = `([A-Za-z0-9_]*)`
+	complexNum = `(\-?\d*\.?\d*)`
+	Float      = `(\-*\d*\.\d*)`
+	Number     = `(\-*\d+)`
+	Color      = `color\(` + complexNum + `, ` + complexNum + `, ` + complexNum + `\)`
+	Point      = `point\(` + Float + `, ` + Float + `, ` + Float + `\)`
+	Vector     = `vector\(` + Float + `, ` + Float + `, ` + Float + `\)`
+	TupleRex   = `tuple\(` + Float + `, ` + Float + `, ` + Float + `, ` + Float + `\)`
 )
 
 func ExpectFloatEquals(a float64, b float64) error {

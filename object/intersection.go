@@ -19,22 +19,23 @@ func (i *Intersection) Object() Sphere {
 
 func (i *Intersection) PrepareComputations(r ray.Ray) Computations {
 	var inside bool
-	negateRayDirection := r.Direction().Negate()
-	position := r.Position(i.t)
-	normalV := i.object.NormalAt(&position)
-	if normalV.Dot(negateRayDirection) < 0 {
+	point := r.Position(i.t)
+	eyeV := r.Direction().Negate()
+	normalV := i.object.NormalAt(&point)
+	if normalV.Dot(eyeV) < 0 {
 		inside = true
 		normalV = *normalV.Negate()
 	} else {
 		inside = false
 	}
+
 	return Computations{
 		time:    i.t,
 		object:  i.object,
-		point:   position,
-		eyeV:    *negateRayDirection,
+		point:   point,
+		eyeV:    *eyeV,
 		normalv: normalV,
-		inside: inside,
+		inside:  inside,
 	}
 }
 
