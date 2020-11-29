@@ -64,13 +64,13 @@ func (s *Sphere) NormalAt(point *tuple.Tuple) tuple.Tuple {
 	transposedInverseTransform := inverseTransform.Transpose()
 	worldNormal := transposedInverseTransform.MultiplyTuple(objectNormal)
 	worldNormal.W = 0
-	return *worldNormal.Normalize()
+	return worldNormal.Normalize()
 }
 
 func (s *Sphere) Material() *Material {
 	return s.material
 }
 
-func (s *Sphere) SetMaterial(mat Material) {
-	s.material = &mat
+func (s *Sphere) SetMaterial(mat *Material) {
+	s.material = mat
 }

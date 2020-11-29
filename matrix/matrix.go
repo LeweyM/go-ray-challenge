@@ -103,7 +103,7 @@ func (m *Matrix) Get(x, y int) float64 {
 	return m.cells[m.index(x, y)]
 }
 
-func (m *Matrix) Multiply(other Matrix) Matrix {
+func (m Matrix) Multiply(other Matrix) Matrix {
 	var newCells []float64
 	for row := 0; row < m.size; row++ {
 		for col := 0; col < m.size; col++ {

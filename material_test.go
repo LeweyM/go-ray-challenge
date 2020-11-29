@@ -39,7 +39,7 @@ func setMToAmbient(arg1 float64) error {
 }
 
 func setSMaterialToM() error {
-	s.SetMaterial(mat)
+	s.SetMaterial(&mat)
 	return nil
 }
 

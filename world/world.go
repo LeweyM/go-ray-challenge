@@ -78,7 +78,7 @@ func NewDefaultWorld() *World {
 	m1.SetColor(tuple.NewColor(0.8, 1.0, 0.6))
 	m1.SetDiffuse(0.7)
 	m1.SetSpecular(0.2)
-	s1.SetMaterial(*m1)
+	s1.SetMaterial(m1)
 
 	s2 := object.NewSphere()
 	s2.SetTransform(matrix.NewScale(0.5, 0.5, 0.5))

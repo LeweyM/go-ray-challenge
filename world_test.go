@@ -53,7 +53,7 @@ func parseSphereFromTable(mm *messages.PickleStepArgument_PickleTable) *object.S
 			sphere.SetTransform(scale)
 		}
 	}
-	sphere.SetMaterial(*material)
+	sphere.SetMaterial(material)
 	return sphere
 }
 

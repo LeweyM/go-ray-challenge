@@ -73,9 +73,9 @@ func (t Tuple) Magnitude() float64 {
 	return math.Sqrt((t.X * t.X) + (t.Y * t.Y) + (t.Z * t.Z) + (t.W * t.W))
 }
 
-func (t Tuple) Normalize() *Tuple {
+func (t Tuple) Normalize() Tuple {
 	mag := t.Magnitude()
-	return &Tuple{
+	return Tuple{
 		X: t.X / mag,
 		Y: t.Y / mag,
 		Z: t.Z / mag,
@@ -90,7 +90,7 @@ func (t Tuple) Dot(t2 *Tuple) float64 {
 		t.W*t2.W
 }
 
-func (t Tuple) Cross(b *Tuple) *Tuple {
+func (t Tuple) Cross(b Tuple) *Tuple {
 	return NewVector(t.Y*b.Z-t.Z*b.Y, t.Z*b.X-t.X*b.Z, t.X*b.Y-t.Y*b.X)
 }
 

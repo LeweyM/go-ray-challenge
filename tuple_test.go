@@ -61,7 +61,8 @@ func equalsColor(c string, arg1, arg2, arg3 float64) error {
 }
 
 func setNormalizeVector(n, v string ) error {
-	tuples[n] = tuples[v].Normalize()
+	normalize := tuples[v].Normalize()
+	tuples[n] = &normalize
 	return nil
 }
 
@@ -128,7 +129,8 @@ func magnitudeEqualsSquareRoot(t string, number float64) error {
 
 func normalizeEqualsVector(t string, arg1, arg2, arg3 float64) error {
 	tuple := tuples[t]
-	return ExpectVector(tuple.Normalize(), arg1, arg2, arg3)
+	normalize := tuple.Normalize()
+	return ExpectVector(&normalize, arg1, arg2, arg3)
 }
 
 func dotEqualsFloat(a, b string, scalar float64) error {
@@ -141,7 +143,7 @@ func dotEqualsFloat(a, b string, scalar float64) error {
 func crossEqualsVector(a, b string, arg1, arg2, arg3 float64) error {
 	tupleA := tuples[a]
 	tupleB := tuples[b]
-	cross := tupleA.Cross(tupleB)
+	cross := tupleA.Cross(*tupleB)
 	return ExpectVector(cross, arg1, arg2, arg3)
 }
 

@@ -45,7 +45,8 @@ func nNormal_atsRootPoint(arg1, arg2, arg3, arg4, arg5, arg6 float64) error {
 }
 
 func nNormalizen() error {
-	return ExpectEqualsTuple(n, n.Normalize())
+	normalize := n.Normalize()
+	return ExpectEqualsTuple(n, &normalize)
 }
 
 func nVector(arg1, arg2, arg3 float64) error {

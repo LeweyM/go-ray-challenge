@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func run() {
+func run5() {
 	rayOrigin := tuple.NewPoint(0, 0, -5)
 	wallZ := 10.0
 	wallSize := 7.0
@@ -24,7 +24,7 @@ func run() {
 	shape := object.NewSphere()
 	material := object.NewMaterial()
 	material.SetColor(tuple.NewColor(1, 0.2, 1))
-	shape.SetMaterial(*material)
+	shape.SetMaterial(material)
 
 	lightPosition := tuple.NewPoint(-10, 10, -10)
 	lightColor := tuple.NewColor(1, 1, 1)
@@ -38,7 +38,8 @@ func run() {
 
 			position := tuple.NewPoint(worldX, worldY, wallZ)
 
-			r := ray.NewRay(rayOrigin, position.Subtract(rayOrigin).Normalize())
+			normalize := position.Subtract(rayOrigin).Normalize()
+			r := ray.NewRay(rayOrigin, &normalize)
 			hit, xs := shape.Intersects(r)
 			if hit {
 				ok, intersection := xs.Hit()
@@ -59,7 +60,7 @@ func run() {
 }
 
 func writeToOutput(ppm string) {
-	f, err := os.Create("output/" + time.Stamp + ".ppm")
+	f, err := os.Create("output/" + time.Now().String() + ".ppm")
 
 	if err != nil {
 		panic(err)
