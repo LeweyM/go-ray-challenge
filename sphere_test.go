@@ -77,7 +77,7 @@ func SphereContext(s *godog.ScenarioContext) {
 	s.Step(`^s\.transform = identity_matrix$`, stransformIdentity_matrix)
 	s.Step(`^set_transform\(s, t\)$`, set_transformsT)
 	s.Step(`^s\.transform = t$`, stransformT)
-	s.Step(`^set_transform\(s, scaling\((\d+), (\d+), (\d+)\)\)$`, set_transformsScaling)
+	s.Step(`^set_transform\(s, scaling\(`+complexNum+`, `+complexNum+`, `+complexNum+`\)\)$`, set_transformsScaling)
 	s.Step(`^set_transform\(s, translation\((\d+), (\d+), (\d+)\)\)$`, set_transformsTranslation)
 	// normalAt
 	s.Step(`^n ← normal_at\(s, point\(`+complexNum+`, `+complexNum+`, `+complexNum+`\)\)$`, nNormal_atsPoint)

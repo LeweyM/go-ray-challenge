@@ -203,6 +203,24 @@ func (m *Matrix) Invert() Matrix {
 	return newMatrix(cells)
 }
 
+func ViewTransform(from, to, up tuple.Tuple) Matrix {
+	forward := to.Subtract(&from).Normalize()
+	left := forward.Cross(up.Normalize())
+	trueUp := left.Cross(forward)
+	orientation := NewIdentityMatrix()
+	orientation.set(0,0, left.X)
+	orientation.set(0,1, left.Y)
+	orientation.set(0,2, left.Z)
+	orientation.set(1,0, trueUp.X)
+	orientation.set(1,1, trueUp.Y)
+	orientation.set(1,2, trueUp.Z)
+	orientation.set(2,0, forward.Negate().X)
+	orientation.set(2,1, forward.Negate().Y)
+	orientation.set(2,2, forward.Negate().Z)
+
+	return orientation.Multiply(NewTranslation(from.Negate().X, from.Negate().Y, from.Negate().Z))
+}
+
 func FloatEquals(f1 float64, f2 float64) bool {
 	EPSILON := 0.0001
 	return math.Abs(f1 - f2) < EPSILON

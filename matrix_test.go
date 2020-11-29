@@ -133,8 +133,12 @@ func bInverseA(b, a string) error {
 	return nil
 }
 
-func bIsTheFollowingXMatrix(b string, arg1, arg2 int, mm *messages.PickleStepArgument_PickleTable) error {
-	return expectEqualMatrices(matrices[b], matrixFromPickleTable(mm))
+func bIsTheFollowingXMatrix(mm *messages.PickleStepArgument_PickleTable) error {
+	return expectEqualMatrices(matrices["B"], matrixFromPickleTable(mm))
+}
+
+func tIsTheFollowingXMatrix(mm *messages.PickleStepArgument_PickleTable) error {
+	return expectEqualMatrices(t, matrixFromPickleTable(mm))
 }
 
 func inverseAIsTheFollowingXMatrix(a string, arg1, arg2 int, mm *messages.PickleStepArgument_PickleTable) error {
@@ -180,7 +184,8 @@ func InitializeMatrixScenario(s *godog.ScenarioContext) {
 	s.Step(`^`+VarName+`\[`+Number+`,`+Number+`\] = `+Float+`$`, setM)
 	s.Step(`^`+VarName+`\[`+Number+`,`+Number+`\] = (\-*\d+)\/(\d+)$`, mFraction)
 	s.Step(`^`+VarName+` ← inverse\(`+VarName+`\)$`, bInverseA)
-	s.Step(`^`+VarName+` is the following `+Number+`x`+Number+` matrix:$`, bIsTheFollowingXMatrix)
+	s.Step(`^B is the following 4x4 matrix:$`, bIsTheFollowingXMatrix)
+	s.Step(`^t is the following 4x4 matrix:$`, tIsTheFollowingXMatrix)
 	s.Step(`^inverse\(`+VarName+`\) is the following (\d+)x(\d+) matrix:$`, inverseAIsTheFollowingXMatrix)
 	s.Step(`^`+VarName+` ← `+VarName+` \* `+VarName+`$`, cATimesB)
 	s.Step(`^`+VarName+` \* inverse\(`+VarName+`\) = `+VarName+`$`, cInverseBA)
