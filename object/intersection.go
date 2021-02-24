@@ -2,6 +2,7 @@ package object
 
 import (
 	"github/lewismetcalf/goRayChallenge/ray"
+	"github/lewismetcalf/goRayChallenge/tuple"
 )
 
 type Intersection struct {
@@ -29,7 +30,9 @@ func (i *Intersection) PrepareComputations(r ray.Ray) Computations {
 		inside = false
 	}
 
+	overPoint := point.Add(normalV.Multiply(tuple.EPSILON))
 	return Computations{
+		overPoint: *overPoint,
 		time:    i.t,
 		object:  i.object,
 		point:   point,

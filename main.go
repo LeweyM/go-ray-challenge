@@ -1,5 +1,5 @@
 package main
 
 func main() {
-	run6()
+	run6(800, 400)
 }

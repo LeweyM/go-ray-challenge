@@ -48,10 +48,11 @@ func (w *World) Intersect(r ray.Ray) object.Intersections {
 func (w *World) ShadeHit(comps object.Computations) *tuple.Color {
 	sphere := comps.Object()
 	material := sphere.Material()
-	point := comps.Point()
 	eyeVector := comps.EyeVector()
+	point := comps.Point()
 	normalVector := comps.NormalVector()
-	lighting := material.Lighting(&w.light, &point, &eyeVector, &normalVector)
+	overPoint := comps.OverPoint()
+	lighting := material.Lighting(&w.light, &point, &eyeVector, &normalVector, w.IsShadowed(&overPoint))
 	return &lighting
 }
 
@@ -64,6 +65,20 @@ func (w *World) ColorAt(r ray.Ray) *tuple.Color {
 		computations := intersection.PrepareComputations(r)
 		return w.ShadeHit(computations)
 	}
+}
+
+func (w *World) IsShadowed(p *tuple.Tuple) bool {
+	v := w.light.Position().Subtract(p)
+	direction := v.Normalize()
+	distance := v.Magnitude()
+	r := ray.NewRay(p, &direction)
+	intersections := w.Intersect(r)
+	hit, xs := intersections.Hit()
+	return hit && xs.Time() < distance
+}
+
+func (w *World) AddObject(s2 object.Sphere) {
+	w.objects = append(w.objects, s2)
 }
 
 func NewWorld() *World {

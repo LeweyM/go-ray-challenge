@@ -5,12 +5,13 @@ import (
 )
 
 type Computations struct {
-	time    float64
-	object  Sphere
-	point   tuple.Tuple
-	eyeV    tuple.Tuple
-	normalv tuple.Tuple
-	inside  bool
+	time      float64
+	object    Sphere
+	point     tuple.Tuple
+	eyeV      tuple.Tuple
+	normalv   tuple.Tuple
+	overPoint tuple.Tuple
+	inside    bool
 }
 
 func (c *Computations) Time() float64 {
@@ -35,4 +36,8 @@ func (c *Computations) NormalVector() tuple.Tuple {
 
 func (c *Computations) IsInside() bool {
 	return c.inside
+}
+
+func (c *Computations) OverPoint() tuple.Tuple {
+	return c.overPoint
 }

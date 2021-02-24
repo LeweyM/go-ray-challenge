@@ -45,12 +45,21 @@ func parseSphereFromTable(mm *messages.PickleStepArgument_PickleTable) *object.S
 		}
 		if left == "transform" {
 			s := removeWhitespace(right)
-			v := strings.Split(s[8:len(s)-1], ",")
-			x, _ := strconv.ParseFloat(v[0], 64)
-			y, _ := strconv.ParseFloat(v[1], 64)
-			z, _ := strconv.ParseFloat(v[2], 64)
-			scale := matrix.NewScale(x, y, z)
-			sphere.SetTransform(scale)
+			if s[:11] == "translation" {
+				v := strings.Split(s[12:len(s)-1], ",")
+				x, _ := strconv.ParseFloat(v[0], 64)
+				y, _ := strconv.ParseFloat(v[1], 64)
+				z, _ := strconv.ParseFloat(v[2], 64)
+				t := matrix.NewTranslation(x, y, z)
+				sphere.SetTransform(t)
+			} else if s[:7] == "scaling" {
+				v := strings.Split(s[8:len(s)-1], ",")
+				x, _ := strconv.ParseFloat(v[0], 64)
+				y, _ := strconv.ParseFloat(v[1], 64)
+				z, _ := strconv.ParseFloat(v[2], 64)
+				scale := matrix.NewScale(x, y, z)
+				sphere.SetTransform(scale)
+			}
 		}
 	}
 	sphere.SetMaterial(material)

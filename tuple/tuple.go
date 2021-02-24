@@ -8,6 +8,8 @@ type Tuple struct {
 	X, Y, Z, W float64
 }
 
+const EPSILON = 0.0001
+
 func NewPoint(x, y, z float64) *Tuple {
 	return &Tuple{x, y, z, 1.0}
 }
@@ -104,6 +106,5 @@ func (t Tuple) Reflect(normal *Tuple) Tuple {
 }
 
 func FloatEquals(f1 float64, f2 float64) bool {
-	EPSILON := 0.0001
 	return math.Abs(f1-f2) < EPSILON
 }

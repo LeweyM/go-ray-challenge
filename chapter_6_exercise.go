@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func run6() {
+func run6(h, v int) {
 	floor := object.NewSphere()
 	floor.SetTransform(matrix.NewScale(10, 0.01, 10))
 	floorMaterial := object.NewMaterial()
@@ -34,7 +34,7 @@ func run6() {
 	rightWall.SetMaterial(floorMaterial)
 
 	middle := object.NewSphere()
-	middle.SetTransform(matrix.NewTranslation(-0.5, 1, 0.5))
+	middle.SetTransform(matrix.NewTranslation(-0.5, 1, -1.5))
 	middleMaterial := object.NewMaterial()
 	middleMaterial.SetColor(tuple.NewColor(0.1, 1, 0.5))
 	middleMaterial.SetDiffuse(0.7)
@@ -51,7 +51,7 @@ func run6() {
 	right.SetMaterial(rightMaterial)
 
 	left := object.NewSphere()
-	left.SetTransform(matrix.NewTranslation(-1.5, 0.33, -0.75).
+	left.SetTransform(matrix.NewTranslation(-2.5, 0.33, -0.75).
 		Multiply(matrix.NewScale(0.33, 0.33, 0.33)))
 	leftMaterial := object.NewMaterial()
 	leftMaterial.SetColor(tuple.NewColor(1, 0.8, 0.1))
@@ -62,9 +62,9 @@ func run6() {
 	newWorld := world.NewWorld()
 	newWorld.SetLight(*light.NewPointLight(*tuple.NewPoint(-10, 10, -10), *tuple.NewColor(1,1,1)))
 	newWorld.SetObjects(*floor, *leftWall, *rightWall, *left, *right, *middle)
-	camera := world.NewCamera(400, 200, math.Pi/3)
+	camera := world.NewCamera(h, v, math.Pi/3)
 	camera.Transform = matrix.ViewTransform(
-		*tuple.NewPoint(0, 1.5, -5),
+		*tuple.NewPoint(0, 1.5, -8),
 		*tuple.NewPoint(0, 1, 0),
 		*tuple.NewVector(0, 1, 0),
 	)

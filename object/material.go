@@ -54,7 +54,7 @@ func (m *Material) SetAmbient(ambient float64) {
 	m.ambient = ambient
 }
 
-func (m *Material) Lighting(l *light.PointLight, point, eye, normal *tuple.Tuple) tuple.Color {
+func (m *Material) Lighting(l *light.PointLight, point, eye, normal *tuple.Tuple, inShadow bool) tuple.Color {
 	effectiveColor := m.Color().Multiply(l.Intensity())
 
 	lightV := l.Position().Subtract(point).Normalize()
@@ -78,7 +78,11 @@ func (m *Material) Lighting(l *light.PointLight, point, eye, normal *tuple.Tuple
 			specular = l.Intensity().MultiplyScalar(m.specular).MultiplyScalar(factor)
 		}
 	}
-	return *ambient.Add(diffuse).Add(specular)
+	if inShadow {
+		return *ambient
+	} else {
+		return *ambient.Add(diffuse).Add(specular)
+	}
 }
 
 func (m *Material) SetDiffuse(d float64) {

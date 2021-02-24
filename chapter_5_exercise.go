@@ -49,7 +49,7 @@ func run5() {
 					normal := obj.NormalAt(&point)
 					eye := r.Direction().Negate()
 					m := obj.Material()
-					color := m.Lighting(light, &point, eye, &normal)
+					color := m.Lighting(light, &point, eye, &normal, false)
 					canvas.WritePixel(x, y, &color)
 				}
 			}

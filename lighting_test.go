@@ -22,7 +22,7 @@ func resultLightingmLightPositionEyevNormalv() error {
 	eyev := tuples["eyev"]
 	normalv := tuples["normalv"]
 	position := tuples["position"]
-	result = mat.Lighting(&l, position, eyev, normalv)
+	result = mat.Lighting(&l, position, eyev, normalv, false)
 	return nil
 }
 
